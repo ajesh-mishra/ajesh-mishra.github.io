@@ -1,0 +1,80 @@
+---
+title: "Perimeter Triangle Challenge"
+description: "Rust coding challenge: given an integer array nums, return the largest perimeter of a triangle with a non-zero area, formed from three of these lengths. If it is impossible to form any triangle of a non-zero area, return 0."
+author: "Ajesh Mishra"
+date: "Sept 8, 2022"
+duration: "5 min read"
+tags: ["rust", "challenge", "perimeter", "binaryheap", "windows"]
+cover: "https://images.unsplash.com/photo-1628126235206-5260b9ea6441?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1587&q=80"
+---
+
+## Solution: Time Limit Exceeded
+
+```rust
+impl Solution {
+    pub fn largest_perimeter_my(mut nums: Vec<i32>) -> i32 {
+        nums.sort_unstable_by(|a, b| b.cmp(a));
+
+        for i in 0..nums.len() {
+            for j in i + 1..nums.len() {
+                for k in j + 1..nums.len() {
+                    match nums[i] < nums[j] + nums[k] {
+                        true => return nums[i] + nums[j] + nums[k],
+                        false => {}
+                    }
+                }
+            }
+        }
+
+        0
+    }
+}
+```
+
+## Solution: Fast
+
+```rust
+impl Solution {
+    pub fn largest_perimeter_fast(mut nums: Vec<i32>) -> i32 {
+        nums.sort_unstable_by(|a, b| b.cmp(a));
+        match nums.windows(3).find(|l| l[0] < l[1] + l[2]) {
+            Some(l) => l.iter().sum(),
+            None => 0,
+        }
+    }
+}
+```
+
+## Solution: Faster
+
+```rust
+impl Solution {
+    pub fn largest_perimeter_faster(nums: Vec<i32>) -> i32 {
+        let mut heap = std::collections::BinaryHeap::from(nums);
+        let (mut b, mut c) = (-1, -1);
+        while let Some(a) = heap.pop() {
+            if a > 0 && b > 0 && c > 0 && c < b + a {
+                return a + b + c;
+            }
+            c = b;
+            b = a;
+        }
+        0
+    }
+}
+```
+
+## Main
+
+```rust
+fn main() {
+    let heights = vec![2, 1, 2];
+    println!("{}", Solution::largest_perimeter_my(heights));
+
+    let heights = vec![2, 1, 2];
+    println!("{}", Solution::largest_perimeter_fast(heights));
+
+    let heights = vec![1, 2, 1];
+    println!("{}", Solution::largest_perimeter_faster(heights));
+}
+```

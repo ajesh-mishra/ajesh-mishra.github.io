@@ -1,0 +1,53 @@
+---
+title: "VS Code Theme"
+description: "I like the default Dark+ theme that VS Code ships with but I made a few tweeks to make it my own. I mostly wanted to give it a more stealthy look."
+author: "Ajesh Mishra"
+date: "Jun 1, 2022"
+duration: "2 min read"
+tags: ["vscode", "theme"]
+cover: "https://images.unsplash.com/photo-1602266624233-233f99b9de36?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80"
+---
+
+## Things to consider
+This is not entirely a new theme, we are going to use the default Dark+ theme and overwite a few defaults to give it a more stealthy look. Go to command pallete and search for `User Settings` and update the section `workbench.colorCustomizations`.
+
+```json
+// "editor.scrollbar.horizontal": "hidden",
+// "editor.scrollbar.vertical": "hidden",
+"breadcrumbs.enabled": false,
+"editor.minimap.enabled": false,
+"editor.scrollbar.verticalScrollbarSize": 0,
+
+"workbench.colorCustomizations": {
+"[Default Dark+]": {
+"sideBar.background": "#161514",
+"editor.background": "#11100f",
+"editor.lineHighlightBackground": "#201f1e",
+"terminal.background": "#11100f",
+"activityBar.background": "#1b1a19",
+"titleBar.activeBackground": "#1b1a19",
+"titleBar.inactiveBackground": "#161514",
+"statusBar.foreground": "#b3b0ad",
+"statusBar.background": "#1b1a19",
+"statusBarItem.remoteBackground": "#1b1a19",
+"editorGroupHeader.tabsBackground": "#11100f",
+"tab.inactiveBackground": "#11100f",
+"tab.activeBorder": "#e1dfdd",
+"list.inactiveSelectionBackground": "#201f1e",
+"tab.activeBackground": "#292827",
+"editorLineNumber.foreground": "#3b3a39",
+"editorIndentGuide.background": "#1b1a19",
+"editorIndentGuide.activeBackground": "#3b3a39",
+"list.hoverBackground": "#201f1e",
+"scrollbarSlider.background": "#11100f",
+"quickInput.background": "#161514",
+}
+},
+"editor.tokenColorCustomizations": {
+  "[*Dark*]": {
+    "comments": "#797775"
+  },
+},
+```
+
+#### settings.json

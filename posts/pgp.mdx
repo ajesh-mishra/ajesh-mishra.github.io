@@ -1,0 +1,36 @@
+---
+title: "PGP"
+description: "Pretty Good Privacy is an encryption program that provides cryptographic privacy and authentication for data communication. PGP is used for signing, encrypting, and decrypting texts, e-mails, files, directories, and whole disk partitions and to increase the security of e-mail communications."
+author: "Ajesh Mishra"
+date: "Aug 15, 2022"
+duration: "10 min read"
+tags: ['mft', 'certificate', 'ssl', 'tls']
+cover: "https://images.unsplash.com/photo-1446941611757-91d2c3bd3d45?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1604&q=80"
+---
+
+At a basic level, PGP encryption uses a combination of two forms of encryption: **symmetric key** encryption, and **public-key** encryption.
+
+- First, PGP generates a random session key using one of two (main) algorithms. This key is a huge number that cannot be guessed, and is only used once.
+- Next, this session key is encrypted. This is done using the public key of the intended recipient of the message. The public key is not tied to a particular person’s identity, and anyone can use it to send them a message.
+- The sender sends their encrypted PGP session key to the recipient, and they are able to decrypt it using their private key. Using this session key, the recipient is now able to decrypt the actual message.
+
+> Public/ Asymmetric Key Cryptography is much, much slower than symmetric encryption, so keeping performance in mind a combination of both is used.
+
+PGP uses `RSA` Algorithm.
+
+## How RSA works?
+
+It is based on the principle that when two large prime numbers are multiplied it's difficult to factor the result. Uses both symmetric and asymmetric keys for encryption as symmetric keys are used to encrypt data and asymmetric keys are used to encrypt the symmetric keys.
+
+## GnuPG Commands
+
+```bash
+# List all the available keys
+gpg --list-keys
+
+# Import a key
+gpg --import pub.asc
+
+# Export a key
+gpg -u "<key_uid>" -e testfile.zip
+```

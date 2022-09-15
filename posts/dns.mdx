@@ -1,0 +1,109 @@
+---
+title: "DNS"
+description: "Domain Name System provides address resolution on the internet. DNS is a network service works over UDP `port 53`."
+author: "Ajesh Mishra"
+date: "May 1, 2022"
+duration: "5 min read"
+tags: ['dns', 'network']
+cover: "https://images.unsplash.com/photo-1562676907-cf2155921949?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1588&q=80"
+---
+
+Example: `www.google.com`, `smtp.google.com` and `ftp.google.com`
+
+- `www` is the **Sub-Domain** for web servers. `smtp` is for email and `ftp` is to transfer files.
+- `google` is the **Domain** name or hostname. This can have multiple servers in the domain.
+- `.co.uk` and `.com` are **Top Level Domains**, IANA (Internet Assigned Numbers Authority).
+
+# How DNS works?
+
+- Every time you connect to a network, the network provides your computer with the IP address of a Local DNS Server (configured in DCP). Then your computer uses the Local DNS Server to lookup IP addresses.
+- When you try to visit a website - your computer sends the domain name to Local DNS Server. The server responds with the corresponding IP address. In case the Local DNS Server doesn’t have the IP address then it connects with other DNS Servers to find the IP address and caches for future use.
+
+> DNS is hierarchical system and organizations who own domain name designate DNS Servers that are authoritative source of Information about their domain names.
+> 
+
+Hierarchical means the `root` domain contains the top level domains like `.com` and `.edu`. DNS Servers map the DNS Name to a IP address by using **DNS Records**.
+
+## DNS Records Types
+
+| Type | Record Name | Description |
+| --- | --- | --- |
+| A | address record | used to map a hostname to an IPv4 address. |
+| AAAA | IPv6 address | used to map a hostname to an IPv6 address. |
+| CNAME | canonical name | It is an alias of an existing record. This helps maping multiple DNS records to the same IP address. |
+| MX | mail exchange | It maps to a domain name to an e-mail server for that domain. |
+| PTR | pointer record | It points to a canonical name and used for reverse DNS look-up. |
+| SOA | start of authority | It provides authoritative information about a DNS zone. |
+
+## DNS Servers Types
+
+- Forwarding requests
+- Resolve Queries
+- Authoritative DNS Servers
+
+## Dig Command
+
+Dig command helps us investigate domain name resolutions. SERVER: 192.168.1.1 is the DNS Server that responded.
+
+```bash
+dig linkedin.com
+;; ANSWER SECTION:
+Linkedin.com    1342    IN    A    108.174.10.10
+
+;; Quesry time: 20 msec
+;; SERVER: 192.168.1.1#53(192.168.1.1)
+;; WHEN: Thus Jul 09 15:27:06 EDT 2020
+;; MSG SIZE revd: 57
+```
+
+We can specify which DNS Server handles are request using the `@` syntax. `8.8.8.8` is Google's DNS Sever that we have queried directly.
+
+```bash
+dig @8.8.8.8 linkedin.com
+;; ANSWER SECTION:
+Linkedin.com    1342    IN    A    108.174.10.10
+
+;; Quesry time: 20 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8)
+;; WHEN: Thus Jul 09 15:27:06 EDT 2020
+;; MSG SIZE revd: 57
+```
+
+## DNSSEC Protocol
+
+Internet works on DNS name resolution, hackers may attempt to insert false DNS records in an intermediate DNS Servers to route clients to visit fake sites. This is called **DNS Poisining Attack**.
+
+DNSSEC Protocol adds digital signatures to DNS to prevent these kinds of attack.
+
+# Bind9
+
+Bind9 helps to set-up a local domain server on a Unix system. 
+
+```bash
+sudo apt-get bind9
+```
+
+Configure `bind9` to only forward requests to certain domains and not query recursively.
+
+```bash
+options {
+	directory "/var/cache/bind";
+	
+  # List of DNS Servers this server will ask when IP
+  # is not present in the cache.
+	forwarders {
+		1.1.1.1; # 
+		8.8.8.8; # Google Public DNS Server
+	};
+
+	forward only;
+}
+```
+
+#### /etc/bind/named.conf.options
+
+Re-start the service to reflect configuration changes.
+
+```bash
+sudo systemctl restart bind9
+```

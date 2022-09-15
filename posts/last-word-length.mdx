@@ -1,0 +1,76 @@
+---
+title: "Last Word Length Challenge"
+description: "Rust coding challenge to find if the length of the last word in a given key."
+author: "Ajesh Mishra"
+date: "June 12, 2022"
+duration: "5 min read"
+tags: ["rust", "challenge", "easy", "last-word-length"]
+cover: "https://images.unsplash.com/photo-1614315517650-3771cf72d18a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1548&q=80"
+---
+
+## Solution
+
+```rust
+fn length_of_last_word(s: String) -> i32 {
+  let mut count:i32 = 0;
+  
+  for c in s.chars().rev() {
+    if count == 0 && c == ' ' {
+      continue;
+    } else if c == ' ' {
+      break;
+    } else {
+      count += 1;
+    }
+  }
+  
+  count
+}
+```
+
+#### main.rs
+
+## Main Function
+
+```rust
+fn main() {
+  let input = String::from("hello world");
+  let result = length_of_last_word(input);
+  
+  println!("Length of Last word is {}", result);
+}
+```
+
+#### main.rs
+
+## Test Cases
+
+```rust
+#[cfg(test)]
+mod tests {
+  use super::*;
+  
+  #[test]
+  fn tc_1() {
+    let input = String::from("hello world");
+    let result = length_of_last_word(input);
+    assert_eq!(result, 5);
+  }
+  
+  #[test]
+  fn tc_2() {
+    let input = String::from("   fly me   to   the moon  ");
+    let result = length_of_last_word(input);
+    assert_eq!(result, 4);
+  }
+  
+  #[test]
+  fn tc_3() {
+    let input = String::from("luffy is still joyboy");
+    let result = length_of_last_word(input);
+    assert_eq!(result, 6);
+  }
+}
+```
+
+#### main.rs

@@ -1,0 +1,87 @@
+---
+title: "Longest Common Prefix"
+description: "Rust coding challenge to find the longest common prefix in a given string."
+author: "Ajesh Mishra"
+date: "June 18, 2022"
+duration: "5 min read"
+tags: ["challenge", "easy", "longest-common-prefix"]
+cover: "https://images.unsplash.com/photo-1614726365930-627c75da663e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1548&q=80"
+---
+
+## Solution
+
+Write a function to find the longest common prefix string amongst an array of strings. If there is no common prefix, return an empty string "".
+
+```rust
+fn longest_common_prefix(strs: Vec<String>) -> String {
+  let mut result = String::from("");
+  let input = strs.clone();
+  let last_str = &input[strs.len() - 1];
+
+  for (i, c) in last_str.chars().enumerate() {  
+    let mut j = 1;
+    for str in &strs {
+      if str.len() > i && &(c.to_string()) == &str[i..i+1] {
+        if j == strs.len() {
+          result.push(c);
+        }
+      } else {
+        return result;
+      }
+
+      j += 1;
+    }
+  }
+  
+  result
+}
+```
+
+#### main.rs
+
+
+## Main Function
+
+```rust
+fn main() {
+  let result = longest_common_prefix(vec![
+    "aaa".to_string(),
+    "aa".to_string(),
+    "aaa".to_string()
+  ]);
+  println!("{}", result);
+}
+```
+
+#### main.rs
+
+## Test Cases
+
+```rust
+#[cfg(test)]
+mod tests {
+  use super::*;
+  
+  #[test]
+  fn tc_1() {
+    let result = longest_common_prefix(vec![
+      "aaa".to_string(),
+      "aa".to_string(),
+      "aaa".to_string()
+    ]);
+    assert_eq!(result, "aa".to_string());
+  }
+
+  #[test]
+  fn tc_2() {
+    let result = longest_common_prefix(vec![
+      "flower".to_string(),
+      "flow".to_string(),
+      "flight".to_string()
+    ]);
+    assert_eq!(result, "fl".to_string());
+  }
+}
+```
+
+#### main.rs

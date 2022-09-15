@@ -1,0 +1,46 @@
+---
+title: "AS2"
+description: "AS2 (Applicability Statement 2) is a http based protocol to transmit messages (especially EDI messages) safely, cheaply and quickly."
+author: "Ajesh Mishra"
+date: "Aug 30, 2022"
+duration: "5 min read"
+tags: ['mft', 'as2', 'protocol']
+cover: "https://images.unsplash.com/photo-1614727187346-ec3a009092b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3000&q=80"
+---
+
+## Features of AS2
+
+- It uses `HTTPS` to protocol to transfer messages with the `POST` method.
+- Partners particitating in AS2 message exchange have a GLN (Global Location Number) which is a 13-digit number that uniquely identifies a company.
+- AS2 uses the `S/MIME` protocol to wrap EDI data in a secure "envelope" and send it over the web.
+- AS2 does not specify the file contents but usually, the file contents are in a standardized format that is separately agreed upon, such as `X12`, `XML` or `EDIFACT`.
+- `MDN` (Message Disposition Notification) is an electronic acknowledgement sent from receiver to sender which confirm that the AS2 message was received.
+
+> Multipurpose Internet Mail Extension (MIME) is a supplementary protocol that allows non-ASCII data to be sent through SMTP. It supports audio, video, images among many other data format.
+
+## Benifites of MDN
+
+- Ensures Data Integrity.
+- Whether the transfer was successful.
+- If the message was sent to correct recipient.
+
+
+## How to set-up AS2 in Sterling Integrator
+
+- Create Self-signed Certificates `Trading Partner` > `Digital Certificates` > `System`. Checkout the public part to share with external partner.
+
+- Create an Organization. The following parameters are configured in it:
+    - Identity Name: Internal to SI.
+    - AS2 Identifier: Unique name how external partner will identify you.
+    - Check-in the certificate created in previous step in both `Exchange Certificate` and `Signing Certificate`.
+
+> Default AS2 Endpoint http://<DNS_od_SI>:<baseport>+33/as2
+
+- Create a AS2 Partner. Details you need from external partner:
+    - AS2 Identifier
+    - AS2 Endpoint
+    - AS2 Certificates for `Signing` and `Encryption`.
+    - If they need `synchronus` or `async` MDN.
+
+
+Detailed information on [AS2 in Sterling Integrator](https://www.ibm.com/support/pages/setting-as2-part-1-as2-organization).

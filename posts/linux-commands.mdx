@@ -1,0 +1,18 @@
+---
+title: "Linux Commands"
+description: "This article has a collection of few useful Linux commands."
+author: "Ajesh Mishra"
+date: "May 5, 2022"
+duration: "10 min read"
+tags: ['linux', 'grep', 'sed', 'unix']
+cover: "https://images.unsplash.com/photo-1446941303752-a64bb1048d54?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+---
+
+
+```bash
+# Grep all the files to update only the matching lines
+grep 'go' * | sed -i 's/go/rust/g'
+
+# Jump to a VM created by rake libvirt command
+ssh -t -i .ssh/jump jump@localhost "~/jump 10.10.10.1"
+```

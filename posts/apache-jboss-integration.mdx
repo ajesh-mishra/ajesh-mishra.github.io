@@ -1,0 +1,181 @@
+---
+title: "Apache Jboss Integration"
+description: "This article talks about how to have Apache connect to multiple Jboss running on a single server. This set-up is part of a three tier architecture where a single application server layer hosts an Apache and 2 Jboss."
+author: "Ajesh Mishra"
+date: "Apr 15, 2022"
+duration: "10 min read"
+tags: ['tomcat', 'apache', 'jboss', 'middleware']
+cover: "https://images.unsplash.com/photo-1630839437035-dac17da580d0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1615&q=80"
+---
+
+# Related Ports
+
+- **AJP** - Apache Jboss Port for Apache Jboss communication via LoadBalance defined in `mod_jk` configuration file `workers.properties`.
+- **TCP** - Protocol is used by the Jboss to communicate with each other.
+
+| Jboss | HTTP | AJP | TCP | Management |
+| --- | --- | --- | --- | --- |
+| node1 | 8080 | 8009 | 7600 | 9990 |
+| node2 | 8180 | 8109 | 7700 | 10090 |
+
+
+# Install and Configure Jboss
+
+```bash
+# Unzip the JBoss zip file
+unzip jboss-eap-7.1.0.Alpha.zip
+
+# Update Permission recursively in the entire jboss file system
+chmod 775 -R jboss-eap-7.1
+```
+
+## Standalone Mode
+
+The config file `/opt/jboss-eap-7.1/bin/standalone.conf` has the JVM size defined.
+
+```bash
+# Specify the exact Java VM executable to use.
+if [ "x${JBOSS_MODULES_SYSTEM_PKGS}" = "x" ]; then
+	JBOSS_MODULES_SYSTEM_PKGS="org.jboss.byteman"
+fi
+
+# Specify options to pass to the Java VM.
+if [ ]; then
+	JAVA_OPTS="-Xms1303m -Xmx1303m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true"
+	JAVA_OPTS="$JAVAOPTS -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS -Djava.awt.headless=true"
+else
+	echo "JAVA_OPTS already set in environment"
+fi
+```
+
+#### standalone.conf
+
+`/opt/jboss-eap-7.1/standalone/configuration/standalone-ha.xml` give `name` to the Jboss instance.
+
+```xml
+<?xml version='1.0' encoding='UTF-8'>
+
+<server name="node1" xmlns="urn:jboss:domain:5.0">
+	<extensions>
+		<extension module="org.jboss.as.clustering.infinispan" />
+		...
+	</extensions>
+
+	<subsystem xmlns="urn:jboss:domain:transactions:3.1">
+		<core-environment node-identifier="node1">
+			<process-id>
+				<uuid/>
+			</process-id>
+		</core-environment>
+
+		<stack name="tcp">
+			<transport type="TCP" socket-binding="jgroups.tcp">
+			<protocol type="TCPPING">
+				<property name="initial_hosts">127.0.0.1[7600],127.0.0.1[7700]</property>
+				<property name="port_range">0</property>
+				<property name="timeout">2000</property>
+			</protocol>
+		</stack>
+
+	</subsystem>
+</server>
+```
+
+#### standalone-ha.xml
+
+## Starting Jboss
+
+The start-up script is `/opt/jboss-eap-7.1/bin/standalone.sh`. 
+
+```bash
+# Staring first Jboss (node1)
+./standalone.sh -c standalone-ha.xml
+
+# Starting second Jboss (node2)
+./standalone.sh -c standalone-ha.xml -Djboss.socket.binding.port-offset=100
+```
+
+## Deploy an Application
+
+To deploy an application place the war file in the `/opt/jboss-eap-7.1/standalone/deployments`.  
+
+# Tomcat and `mod_jk` Configuration
+
+```bash
+# Unzip the Tomcat zip file and set permission.
+tar -zxf tomcat-connectors-1.2.41-src.tar.gz
+chmod 775 -R tomcat-connectors-1.2.41-src
+
+# Configure Tomcat
+cd tomcat-connectors-1.2.41-src/native
+sudo ./configure --with-apxs=/etc/apache2/bin/apxs
+
+# Build Apache modules - /etc/apache2/modules/mod_jk.so
+sudo make
+sudo make install
+```
+
+LoadModule the newly created module - `mod_jk.so` to apache configuration file `/etc/apache2/conf/httpd.conf`. 
+
+`.so` files are compiled liberary files which gets created from the command `sudo make install` . It stands for “Shared Object” as is analogous to `.dll` files in Windows.
+
+```bash
+ServerRoot "/etc/apache2"
+
+# Path to the module is relative to the ServerRoot
+LoadModule jk_module modules/mod_jk.so
+
+# Config file of mod_jk - workers.properties
+# Need to create the file
+JkWorkersFile conf/workers.properties
+
+# Redirect to worker1 (node1)
+JkMount /* loadbalancer
+JkMount /status stat
+
+# Set log level to debug
+JkLogLevel debug
+
+# Server Status can be checked in 
+# URL: http://localhost:80/status
+
+# The server-status page may be used as a starting place for 
+# troubleshooting a situation where your server is consuming CPU or Memory
+<location /server-status>
+	SetHandler server-status
+	Order deny,allow
+	Allow from all
+	Require all granted
+</location>
+```
+
+#### httpd.conf
+
+```bash
+worker.list=loadbalancer.stat
+
+# Node1
+worker.node1.type=ajp13
+worker.node1.host=127.0.0.1
+worker.node1.port=8009
+worker.node1.lbfactor=1
+
+# Node2
+worker.node2.type=ajp13
+worker.node2.host=127.0.0.1
+worker.node2.port=8109
+worker.node2.lbfactor=1
+
+# Load Balancing Behaviour
+worker.loadbalancer.type=lb
+worker.loadbalancer.balance_workers=node1,node2
+worker.loadbalancer.sticky_session=1
+
+# Server Status can be checked in 
+# URL: http://localhost:80/status
+worker.stat.type=status
+```
+
+#### workers.properties
+
+Restart Apache with command `sudo ./apache2ctl restart` and check the logs `/etc/apache2/logs/mod_jk.log`

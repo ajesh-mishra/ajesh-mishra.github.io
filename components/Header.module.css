@@ -1,0 +1,3 @@
+.icon {
+  @apply h-4 w-4 mt-1 fill-fluent-50 sm:h-5 sm:w-5 lg:h-6 lg:w-6 hover:cursor-pointer;
+}

@@ -1,0 +1,49 @@
+---
+title: "FTPS"
+description: "FTPS (File Transfer Protocol Secure) is an extension of the popular File Transfer Protocol that supports Transport Layer Security (TLS) and the new defunct Secure Sockets Layer (SSL)."
+author: "Ajesh Mishra"
+date: "May 1, 2022"
+duration: "5 min read"
+tags: ['mft', 'ftps', 'protocol']
+cover: "https://images.unsplash.com/photo-1562676907-cf2155921949?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1588&q=80"
+---
+
+## How FTPS works?
+
+- Client sends `AUTH TLS` or `AUTH SSL` command to encrypt the **Command Channel** with `TLS` or `SSL`.
+- **Server** and **Client** Validation happens using `X.509` certificates as it would in TLS.
+- `PBSZ` (Protected Buffer Size) Buffer Size of the protocol used to encrypt the Data. Zero for TLS.
+- To encrypt and protect **Data Channel** client send `PROT` command.
+- `CCC` (Clear Control Channel) and `CDC` (Clear Data Channel) commands can be used any time during the session to stop encryption on either of the channels.
+
+| Protocol | Control/ Command Port | Data Port |
+| --- | ---: | ---: |
+| FTP | 21 | 20 |
+| FTPS | 990 | 989 |
+
+
+## Types of FTPS Connections
+
+- **Implicit**: Mandates to secure both Data and Control channels, hence SSL handshake and Authorization command is necessary even before any FTP command is transferred.
+- **Explicit**: Client gets to decide weather to secure the channels, this was done so that non secure client's could also connect to FTPS ports eliminating the need to configure 2 FTP servers
+- **Forced Explicit**: Server forces the credentials in the control channel to be secure and client may choose to secure the data channel
+
+
+## Types of FTP Connections
+
+- **Active**: Client actively issues the `PORT` command so that server can initate connection for Data Channel. This is the default.
+- **Passive**: Client requests server to confirm on data port by issuing `PASV` command and then initates the connection for data channel.
+
+## SFTP vs. FTPS
+
+| SFTP | FTPS |
+| --- | --- |
+| SFTP builds on Secure Shell Protocol `SSH` and adds on file transfer capabilities. | FTPS builds on File Transfer Protocol `FTP` and adds on a security and encryption layer through `TLS`. |
+| Uses a single connection through only one port, making it easier to install firewall solutions. | It needs a secondary data connection, and its use of multiple ports makes it difficult for firewalls to work. |
+| Involves a high resource overhead and slows down file delivery. | It is simple, straightforward, and lean, making it several times faster. |
+| Supports only binary transmission, and users cannot choose between different modes. | It supports both binary and ASCII transmissions, making it easier to maintain logs. |
+| Authentication and does not need signed certificates, as the data is inherently encrypted through public-key cryptography.  | The FTP server must mandatorily provide a public-key certificate to sign off on the authentication. |
+| Supports advance features like `chown`, `chmod`, `mkdir`, `mv` and `ln` on the remote system. | Supports limited features like `cd`, `ls`, `abor` and `size`.
+
+- `abor` is to cancel a file transfer currently in progress.
+- `size` fetch file size of remote file.

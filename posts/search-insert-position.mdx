@@ -1,0 +1,108 @@
+---
+title: "Search Insert Position"
+description: "Rust coding challenge to find the insert position."
+author: "Ajesh Mishra"
+date: "June 20, 2022"
+duration: "5 min read"
+tags: ["challenge", "easy", "search-insert-position"]
+cover: "https://images.unsplash.com/photo-1529788295308-1eace6f67388?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80"
+---
+
+## Solution
+
+Given a sorted array of distinct integers and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order. You must write an algorithm with O(log n) runtime complexity.
+
+```rust
+pub fn search_insert(nums: Vec<i32>, target: i32) -> i32 {
+  for (i, num) in nums.iter().enumerate() {
+    if num >= &target {
+      return i as i32;
+    }
+  }
+  nums.len() as i32
+}
+```
+
+#### main.rs
+
+## Optimised Recursive Solution
+
+```rust
+pub fn search_insert(nums: Vec<i32>, target: i32) -> i32 {
+  fn get_pos(nums: &Vec<i32>, target: i32, start: usize, end: usize) -> usize {
+    if end - start == 1 {
+      if nums[start] >= target {
+        return start;
+      } else {
+        return end;
+      }
+    }
+    
+    let mid = (end + start) / 2;
+    
+    if target == nums[mid] {
+      return mid;
+    } else if target > nums[mid] {
+      get_pos(nums, target, mid, end)
+    } else {
+      get_pos(nums, target, start, mid)
+    }
+  }
+  
+  get_pos(&nums, target, 0, nums.len()) as i32
+}
+```
+
+#### main.rs
+
+
+## Main Function
+
+```rust
+fn main() {
+  let nums = vec![1,3,5,6];
+  let target = 5;
+  println!("Result: {}", search_insert(nums, target));
+}
+```
+
+#### main.rs
+
+## Test Cases
+
+```rust
+#[cfg(test)]
+mod tests {
+  use super::*;
+  
+  #[test]
+  fn tc_1() {
+    let nums = vec![1,3,5,6];
+    let target = 5;
+    assert_eq!(search_insert(nums, target), 2);
+  }
+  
+  #[test]
+  fn tc_2() {
+    let nums = vec![1,3,5,6];
+    let target = 2;
+    assert_eq!(search_insert(nums, target), 1);
+  }
+  
+  #[test]
+  fn tc_3() {
+    let nums = vec![1,3,5,6];
+    let target = 7;
+    assert_eq!(search_insert(nums, target), 4);
+  }
+
+  #[test]
+  fn tc_4() {
+    let nums = vec![1];
+    let target = 1;
+    assert_eq!(search_insert(nums, target), 0);
+  }
+}
+```
+
+#### main.rs

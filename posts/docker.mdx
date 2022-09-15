@@ -1,0 +1,219 @@
+---
+title: "Docker"
+description: "Docker uses a technology called `namespaces` to provide the isolated workspace called the container."
+author: "Ajesh Mishra"
+date: "Aug 30, 2022"
+duration: "5 min read"
+tags: ['devops', 'docker', 'container']
+cover: "https://images.unsplash.com/photo-1614727187346-ec3a009092b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3000&q=80"
+---
+
+The idea behind a namespace is to wrap certain `global system resources` in an abstraction layer. This makes it appear like the processes within a namespace have their own isolated instance of the resource. The kernels namespace abstraction allows different groups of processes to have different views of the system.
+
+| Resource | Description |
+| --- | --- |
+| mnt | Mount helps create an isolated file system |
+| pid | Process ID |
+| net | Network |
+| ipc | Interprocess Communication |
+| uts | UNIX Time-sharing System allows us to unshare the domain and hostname |
+| user | User ID |
+| cgroup | Control Group prevents leaking host information into a namespace |
+
+[This article provides deeper understanding of how container work under the hood](https://medium.com/@saschagrunert/demystifying-containers-part-i-kernel-space-2c53d6979504).
+
+
+## Namespace API
+
+- **Clone()**: It is similar to `fork()` but allows the child process to share parts of its `execution context` with the calling process.
+- **Unshare()**: enables a process to `disassociate` parts of the execution context.
+- **Setns()**: This function can be used to `join` an existing namespace.
+- **Proc()**: It helps populate additional filesystems specific to namespace in `/proc/$PID/ns` as a `magic` link which allows us to track if a perticular process reside in a specific namespace.
+
+> Execution Context of a process are things like the `memory space`, the `table of file descriptors`, and the `table of signal handlers`.
+
+
+## Docker Objects
+
+- **Images**: Read-only template with instructions to create a container.
+- **Containers**: It is a runnable instance of an image. From OS point of view is an isolated group of processes running on a host.
+- **Volumes**: File system that can be mounted on a container.
+- **Networks**
+
+
+## Components of Docker
+
+- Docker Daemon (dockerd): Listens for API requests and manages docker objects.
+- Docker Client (docker): Connects to Daemon when docker commands are invoked.
+- Docker Compose: 
+- Docker Content Trust
+- Kubernetes
+- Credential Helper
+
+
+## Basic Commands
+
+- Build an Image from a Dockerfile
+
+```bash
+docker build -t hello-docker .
+```
+
+`-t` gives a tag name to this image  
+`hello-world` is the name of the image  
+`.` signifies present working directory where `Dockerfile` is present
+
+- List the Image
+
+```bash
+docker image ls
+```
+
+- Run the Image as Container
+
+```bash
+docker run --name hello-docker-proc -it hello-docker
+```
+
+`hello-docker-proc` is the name of the container  
+`-it` creats an interactive bash shell in the container.
+
+- List all the Containers running
+
+```bash
+docker ps -a | grep 'hello'
+```
+
+- Clean up Containers
+
+```bash
+docker container rm hello-docker-proc
+```
+
+- Remove an Image
+
+```bash
+docker rmi -f fd484f19954f
+```
+
+## Volumes
+
+```bash
+docker volume create <volume_name>
+docker volume ls
+docker volume rm <volume_name>
+docker volume inspect <volume_name>
+
+# Removes all the volumes that are not referenced by any containers
+docker volume prune
+```
+
+## Run
+
+```bash
+docker run -d -v hello:/world busybox ls /world
+docker run  -v `pwd`:`pwd` -w `pwd` -i -t  ubuntu pwd
+docker run -v /doesnt/exist:/foo -w /foo -i -t ubuntu bash
+docker run --expose 80 ubuntu bash
+docker run --env VAR1 --env VAR2 ubuntu env | grep VAR
+```
+
+## Sample Dockerfile
+
+The below docker file demonstrates the full use of `cache` by making use of a technique called `multi-stage build` while building Docker images.
+
+```docker
+FROM node:lts as dependencies
+WORKDIR /my-project
+COPY package.json package-lock.json ./
+RUN npm ci
+
+FROM node:lts as builder
+WORKDIR /my-project
+COPY . .
+COPY --from=dependencies /my-project/node_modules ./node_modules
+RUN npm build
+
+FROM node:lts as runner
+WORKDIR /my-project
+ENV NODE_ENV production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /my-project/next.config.js ./
+COPY --from=builder /my-project/public ./public
+COPY --from=builder /my-project/.next ./.next
+COPY --from=builder /my-project/node_modules ./node_modules
+COPY --from=builder /my-project/package.json ./package.json
+
+USER nextjs
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+#### Dockerfile
+
+
+## Most Used Parameters
+
+- **PORT**: Maps the host port to container port when two port values are provided. But if a single port value is provided then it is mapped to a random host port.
+
+```yml
+services: 
+  myapp1:
+  ...
+  # "127.0.0.1:6060:6060/udp"
+  ports:
+  - target: 6060
+    host_ip: 127.0.0.1
+    published: 6060
+    protocol: udp
+    mode: host
+```
+
+#### docker-compose.yml
+
+- **EXPOSE**: Takes a single port value and opens it up to other containers in the network. Note the port is not mapped to any host port.
+- **CMD**: If arguments to `run` command is mentioned the parameters to `cmd` is ignored.
+- **ENTYRPOINT**: The parameters mentioned here are appended to the arguments provide to `run` command.
+
+## Docker Compose
+
+```bash
+docker-compose up -d
+```
+
+```yml
+version: "3.8"
+
+services:
+    frontend:
+        build: ./frontend
+        ports:
+            - 3000:3000
+        depends_on:
+            - backend
+            - database
+
+    backend:
+        build: ./backend
+        ports:
+            - 4200:4200
+        enrironment:
+            DB_URL: mongodb://database/vidly
+        depends_on:
+            - database
+
+    database:
+        image: mongo:4.0-xenial
+        ports:
+            27017:27017
+        volumes:
+            - /opt/data/db:/data/db
+        environment:
+            - db-user: admin
+            - db-password: password
+```
+
+#### docker-compose.yml

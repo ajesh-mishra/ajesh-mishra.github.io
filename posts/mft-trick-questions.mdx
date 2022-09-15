@@ -1,0 +1,62 @@
+---
+title: "MFT"
+description: "Some useful interview questions."
+author: "Ajesh Mishra"
+date: "Aug 30, 2022"
+duration: "5 min read"
+tags: ['mft', 'cd', 'sftp', 'protocol']
+cover: "https://images.unsplash.com/photo-1614727187346-ec3a009092b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3000&q=80"
+---
+
+## Fastest Protocol
+
+SFTP is the slowest 
+
+- SFTP transfers are in chuncks `less than 32K`, where are protocols like HTTPS and FTPS stream the data.
+- Each chunck of data called a `packet` is encrypted at source and decrypted at destination.
+- 
+
+
+## Server Capacity
+- i/o
+- CPU Cores ~ Threads
+- File Descriptors: Is a number that uniquely identifies an open file.
+
+When a process makes a successful request to open a file, the kernel returns a file descriptor which points to an entry in the kernel's **global file table**. The parameter `ulimit` in file `/etc/security/limits.conf` determins the maximum number file descriptors of that server. 
+
+```bash
+ulimit -n 4096
+```
+#### /etc/security/limits.conf
+
+
+## SFG Performance Tuning
+
+- /<install_dir>/bin/tuning.properties or troubleshooter
+- /queueWatcher
+- depends on file transfer volume
+- max_thread
+- DB pool ~ cpu max threads
+
+
+## Tuning Connect Direct
+
+CD can make use of Network Protocols like `TCP/IP` (Transmission Control Protocol/ Internet Protocol) and `Aspera FASP` (Fast And Secure Protocol). An alternative to TCP is the UDP (User Datagram Protocol).
+
+- Communications Buffer Size: 65535 - this is the optimal value.
+- Use Compression for large files only.
+- Checkpoint (ckpt=10MB, dafault) means the transfer pauses after every 10MB so that a restart flag can be set with remote node. In case of fast networks you can increase the value to 100MB.
+ 
+> Can use tools like iPerf to evaluate your network capacity.
+
+
+## Cloud Whitelisting
+
+- We can have AWS resources with Static IP.
+- We can use a proxy server to connect to the AWS endpoints if dynamic IPs are used.
+
+
+## File Size Limitation
+
+- Have to come up with custom BP which ckecks the file size before pulling.
+- If external partner pushes the file to a mailbox we can check the file size before processing meaning sending it to the consumer mailbox.

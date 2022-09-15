@@ -1,0 +1,37 @@
+---
+title: "Vagrant"
+description: "Vagrant is a command line that uses VirtualBox to create VM locally."
+author: "Ajesh Mishra"
+date: "Apr 15, 2022"
+duration: "10 min read"
+tags: ['vagrant', 'chef']
+cover: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80"
+---
+
+```bash
+# Check the version
+vagrant --version
+
+# Create a new VM
+vagrant box add bento/centos-7.2 --provider=virtualbox
+
+# Create a Vagrantfile to start the VM
+vagrant init bento/centos-7.2
+
+# Start the VM
+vagrant up
+
+# Shows status of all the VMs
+vagrant status
+
+# Login into the VM
+vagrant ssh <default>
+```
+
+```bash
+# Install Chef CDK
+curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P chefdk -c stable -v 0.18.30
+
+# Check the Chef Version
+chef --version
+```

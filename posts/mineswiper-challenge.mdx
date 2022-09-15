@@ -1,0 +1,147 @@
+---
+title: "Mineswiper Challenge"
+description: "Rust coding challenge to build a terminal clone of mineswiper."
+author: "Ajesh Mishra"
+date: "May 28, 2022"
+duration: "10 min read"
+tags: ["rust", "challenge", "mineswiper"]
+cover: "https://images.unsplash.com/photo-1630839437035-dac17da580d0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1615&q=80"
+---
+
+## Solution
+I am trying to create a mineswiper game in the terminal in rust.
+
+```rust
+
+use std::io;
+use std::fmt;
+use std::process;
+use std::collections::HashSet;
+
+#[derive(Debug, PartialEq, Eq, Hash)]
+struct Position (u8, u8);
+
+struct Mineswiper {
+	height: u8,
+	width: u8,
+	mine_fields: HashSet<Position>,
+	open_fields: HashSet<Position>,
+	flag_fields: HashSet<Position>,
+}
+
+impl fmt::Display for Mineswiper {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    write!(f, " height:{}, \n width:{}, \n mine_fields:{:?}, \n open_fields:{:?}, \n flag_fields:{:?}", 
+      self.height, self.width, self.mine_fields, self.open_fields, self.flag_fields)    
+  }
+}
+
+impl Mineswiper {
+  pub fn new() -> Mineswiper {
+    Mineswiper {
+      height: 10,
+      width: 10,
+      mine_fields: {
+        let mine_fields = HashSet::from([
+	  Position(5, 5), 
+	  Position(6, 6), 
+	  Position(2, 4), 
+	  Position(5, 7), 
+	  Position(6, 9)
+	]);
+        mine_fields
+      },
+      open_fields: HashSet::new(),
+      flag_fields: HashSet::new(),
+    }
+  }
+
+  pub fn show(&self) {
+    for i in (0..self.height).rev() {
+      for j in 0..self.width {
+        let pos = Position(j, i);
+        if self.open_fields.contains(&pos) {
+          let mine_count = self.get_mine_count(pos);
+          print!("open {} ", mine_count);
+        // } else if self.mine_fields.contains(&pos) {
+        //   print!(" mine  ");
+        } else {
+          print!("({}, {}) ", j, i);
+        }
+      }
+      println!("");
+    }
+  }
+
+  fn get_neighbours(&self, pos: Position) -> Vec<Position> {
+    let mut x_min = pos.0;
+    let mut x_max = pos.0 + 1;
+    let mut y_min = pos.1;
+    let mut y_max = pos.1 + 1;
+
+    if x_min <= 0 {x_min = pos.0;} else {x_min = pos.0 - 1;}
+    if x_max >= self.width {x_max = pos.0;}
+    if y_min <= 0 {y_min = pos.1;} else {y_min = pos.1 - 1;}
+    if y_max >= self.width {y_max = pos.1;}
+
+    let mut neighbours: Vec<Position> = Vec::new();
+
+    for x in x_min..x_max + 1 {
+      for y in (y_min..y_max + 1).rev() {
+        if pos.0 == x && pos.1 == y {
+          continue;
+        } else {
+          neighbours.push(Position(x, y));
+        }
+      }
+    }
+
+    neighbours
+  }
+
+  fn get_mine_count(&self, pos: Position) -> u8 {
+    let neighbours = self.get_neighbours(pos);
+    let mut count: u8 = 0;
+
+    for n in neighbours {
+      if self.mine_fields.contains(&n) { count += 1; }
+    }
+
+    count
+  }
+
+  pub fn open(&mut self, pos: Position) {
+    if self.mine_fields.contains(&pos) {
+      println!("\n\n You stepped on a mine.");
+      println!(" Game Over!");
+      process::exit(0);
+    } else {
+      self.open_fields.insert(pos);
+    }
+  }
+}
+
+fn main() {
+  let mut m = Mineswiper::new();
+
+  m.open(Position(5, 0));
+  m.open(Position(0, 4));
+  m.open(Position(4, 4));
+  m.open(Position(5, 6));
+  m.open(Position(5, 9));
+
+  m.show();
+
+  print!("Enter value for x: ");
+  let mut input_text = String::new();
+  io::stdin()
+    .read_line(&mut input_text)
+    .expect("failed to read from stdin");
+
+  let x = input_text.trim();
+  match x.parse::<u8>() {
+    Ok(i) => println!("x: {}", i),
+    Err(..) => println!("this was not an integer: {}", x),
+  };
+}
+```

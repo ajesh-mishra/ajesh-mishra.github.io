@@ -1,0 +1,73 @@
+---
+title: "Cryptography"
+description: "Cryptography can be defined as a method of securing data such that it’s trusted and that it’s viewable only by authorized parties."
+author: "Ajesh Mishra"
+date: "Aug 30, 2022"
+duration: "5 min read"
+tags: ['mft', 'cryptography', 'pgp']
+cover: "https://images.unsplash.com/photo-1517976487492-5750f3195933?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+---
+
+
+Cryptographic keys can be stored in PKI (Public Key Infrastructures) and Smart Card which we use to securely unlock doors in a building.
+
+TPM - Trusted Platform Module is a firmware that can store cryptographic keys that are used to encrypt and decrypt entire disc volumes. TPM can also store information about the start-up sequence on a machine and also detect if it has been tampered with.
+
+Token devices both hardware and software based.
+
+## Symmetric Key Encryption
+
+Symmetric encyrption uses a single secret key to both encrypt and decrypt data. Examples of symetric key algorithms:
+
+| Algorithm Name | Max Key Size in Bits |
+| --- | --- |
+| AES | 256 |
+| RC4 | 2048 |
+| 3DES | 168 |
+| Blowfish | 448 |
+
+## Asymmetric/ Public Key Encryption
+
+Asymmetric Encryption uses two mathematically related keys, a public and a provate key. Examples of asymmetric algorithms:
+
+| Algorithm Name | Max Key Size in Bits |
+| --- | --- |
+| RSA | 4096 |
+| Diffie-Hellman | n/a |
+| ElGamal | 2048 |
+| ECC | 256 |
+
+Sender uses public key of the recipient to encrypt data and the recipient uses the corresponding private key to decrypt the data.
+
+> Hash is an Algorithm which is only used to encrypt and the message digest can't be decrypted. (e.g. SHA-1 and MD5)
+
+# How does a Hash work?
+
+- Pads the message with random data.
+- Encrypts the message.
+- Takes finite number of bytes to form a finger print.
+
+> Hash can also be used to check data integrity during a transfer. Meaning if the data has been tampered during the transfer.
+
+# What is a Cipher?
+
+Cipher is the mechanism how the algorithm would be used to encrypt the data (e.g. Block and Streams ciphers).
+
+- Block cipher - e.g. `DES`, `3DES`, `AES`, `IDEA`
+- Stream cipher - e.g. `RC4` used in SSL.
+
+## How does Block cipher work?
+
+- Uses **Initialisation Vector** (IV) and **Cipher Block Chaining**  (CBC).
+- **Xor IV** and 1st chunk of message and encrypt it with a key from the key table
+- **Xor** result/ digest and 2nd chunk of message and encrypt it
+
+## What is DES?
+
+Digital Encryption Standard (obsolete now) uses a 56 bit key to create a key table. And then a key from the key table is used to encrypt data.
+
+> 3DES just uses 3 different keys one after the other to perform the operation 3 times.
+
+
+- **IDEA** - International Data Encryption Algorithm. Uses 128 bit key to generate 56 keys each of 16 bits.
+- **AES** - Advanced Encryption Standard.

@@ -1,0 +1,68 @@
+---
+title: "Sum Two Challenge"
+description: "Rust coding challenge to find the positions in a vector which sum matches the target given."
+author: "Ajesh Mishra"
+date: "June 10, 2022"
+duration: "5 min read"
+tags: ["rust", "challenge", "sum"]
+cover: "https://images.unsplash.com/photo-1536697246787-1f7ae568d89a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1587&q=80"
+---
+
+## Solution
+
+```rust
+fn two_sum(nums: Vec<i32>, target: i32) -> Option<Vec<usize>> {
+  for (i, num) in nums.iter().enumerate() {
+    let mut j = i + 1;
+    while j < nums.len() {
+      if num + nums[j] == target {
+        return Some(vec![i, j]);
+      }
+      j += 1;
+    }
+  }
+  
+  None
+}
+
+fn main() {
+  if let Some(result) = two_sum(vec![2,8,11,15], 9) {
+    println!("{:?}", result);
+  } else {
+    println!("No result!");
+  }
+}
+```
+
+#### main.rs
+
+## Test Cases
+
+```rust
+#[cfg(test)]
+mod tests {
+  use super::*;
+  
+  #[test]
+  fn tc_1() {
+    assert_eq!(two_sum(vec![2,8,11,15], 9), None);
+  }
+  
+  #[test]
+  fn tc_2() {
+    assert_eq!(two_sum(vec![2,7,11,15], 9), Some(vec![0, 1]));
+  }
+  
+  #[test]
+  fn tc_3() {
+    assert_eq!(two_sum(vec![3,2,4], 6), Some(vec![1, 2]));
+  }
+  
+  #[test]
+  fn tc_4() {
+    assert_eq!(two_sum(vec![3,3], 6), Some(vec![0, 1]));
+  }
+}
+```
+
+#### main.rs

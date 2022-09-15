@@ -1,0 +1,91 @@
+---
+title: "Excel Column Challenge"
+description: "Rust coding challenge to determine the column name for a given column number."
+author: "Ajesh Mishra"
+date: "June 13, 2022"
+duration: "5 min read"
+tags: ["rust", "challenge", "excel-column"]
+cover: "https://images.unsplash.com/photo-1446776899648-aa78eefe8ed0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80"
+---
+
+## Solution
+
+```rust
+fn convert_to_title(column_number: i32) -> String {
+  let mut char = String::from("");
+  let res = column_number / 26;
+  let rem = ((column_number % 26) + 64) as u32;
+
+  if let Some(c) = char::from_u32(rem){
+    char = c.to_string();
+  } 
+
+  if res == 0 {
+    return char;
+  } else if rem == 64 {
+    match res {
+      1 => {
+        return format!("{}", "Z".to_string());
+      },
+      26 => {
+        return format!("{}{}", convert_to_title(res), "Z".to_string());
+      },
+      _ => {
+        return format!("{}{}", convert_to_title(res-1), "Z".to_string());
+      }
+    }
+  } else {
+    return format!("{}{}", convert_to_title(res), char);
+  }
+
+}
+```
+
+#### main.rs
+
+## Main Function
+
+```rust
+fn main() {
+  let result = convert_to_title(52);
+  println!("AZ - {}", result);
+}
+```
+
+#### main.rs
+
+## Test Cases
+
+```rust
+#[cfg(test)]
+mod tests {
+  use super::*;
+  
+  #[test]
+  fn tc_1() {
+  	assert_eq!(convert_to_title(701), "ZY".to_string());
+  }
+
+  #[test]
+  fn tc_2() {
+  	assert_eq!(convert_to_title(28), "AB".to_string());
+  }
+
+  #[test]
+  fn tc_3() {
+  	assert_eq!(convert_to_title(702), "ZZ".to_string());
+  }
+
+  #[test]
+  fn tc_4() {
+  	assert_eq!(convert_to_title(2147483647), "FXSHRXW".to_string());
+  }
+
+  #[test]
+  fn tc_5() {
+  	assert_eq!(convert_to_title(52), "AZ".to_string());
+  }
+}
+```
+
+#### main.rs

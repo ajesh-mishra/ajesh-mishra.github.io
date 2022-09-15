@@ -1,0 +1,71 @@
+---
+title: "Excel Column 2 Challenge"
+description: "Rust coding challenge to determine the column number for a given column name as it would appear in MS Excel."
+author: "Ajesh Mishra"
+date: "June 13, 2022"
+duration: "5 min read"
+tags: ["rust", "challenge", "excel-column"]
+cover: "https://images.unsplash.com/photo-1628126235206-5260b9ea6441?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1587&q=80"
+---
+
+## Solution
+
+```rust
+fn title_to_number(column_title: String) -> i32 {
+  let mut result = 0;
+  for (i, c) in column_title.chars().rev().enumerate() {
+    let pos = c as i32 - 64;
+    result +=  26_i32.pow(i as u32) * pos;
+  }
+  result
+}
+```
+
+#### main.rs
+
+## Main Function
+
+```rust
+fn main() {
+  let result = title_to_number("FXSHRXW".to_string());
+  println!("2147483647\n{}", result);
+}
+```
+
+#### main.rs
+
+## Test Cases
+
+```rust
+#[cfg(test)]
+mod tests {
+  use super::*;
+  
+  #[test]
+  fn tc_1() {
+    assert_eq!(title_to_number("ZY".to_string()), 701);
+  }
+
+  #[test]
+  fn tc_2() {
+    assert_eq!(title_to_number("AB".to_string()), 28);
+  }
+
+  #[test]
+  fn tc_3() {
+    assert_eq!(title_to_number("ZZ".to_string()), 702);
+  }
+
+  #[test]
+  fn tc_4() {
+    assert_eq!(title_to_number("FXSHRXW".to_string()), 2147483647);
+  }
+
+  #[test]
+  fn tc_5() {
+    assert_eq!(title_to_number("AZ".to_string()), 52);
+  }
+}
+```
+
+#### main.rs

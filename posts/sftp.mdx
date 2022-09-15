@@ -1,0 +1,72 @@
+---
+title: "SFTP"
+description: "SFTP (SSH File Transfer Protocol) is a secure file transfer protocol. It is an improvement over the SSH protocol. It supports the full security and authentication functionality of SSH."
+author: "Ajesh Mishra"
+date: "Aug 30, 2022"
+duration: "5 min read"
+tags: ['mft', 'sftp', 'protocol']
+cover: "https://images.unsplash.com/photo-1614727187346-ec3a009092b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3000&q=80"
+---
+
+
+## Dual Authentication 
+
+- Client is asked to check if the server is know by checking in the known host key.
+- Once server is validated, client will encrypt a signature using the private key and send it to the server to verify the signature using client's public key.
+
+
+## What are the parameters required for SFTP?
+
+- **Cipher** - `3des-cbc`, `aes128-cbc`, `blowfish-cbc`.
+- **MAC** (Message Authentication Codes) - `hmac-sha1`, `hmac-md5`, `hmac-sha2-256`.
+- **Know Host Key** of the server.
+- **User identity key** from client.
+
+> MAC is kind of a Hash Algorithm used to verify data integrity. 
+
+## What are the commonly used SFTP commands?
+
+```bash
+# Command to scan a SSH Host key 
+ssh-keyscan -t dsa -p 22 <hostname>
+
+# Command to create SSH Keys 
+ssh-keygen -b 1024 -t rsa
+
+# Run the below command on client to copy client user's public key 
+# to authorized_keys on the server
+ssh-copy-id -i id_rsa.pub user@remoteserver
+```
+
+> The file `~/.ssh/authorized_keys` should have `600` permission, meaning only the user should have full permission on the file and no one else.
+
+SFTP Commands to connect to SFTP Server.
+
+```bash
+sftp -i <path_to/private_key> user@hostname
+sftp -oIdentityFile=<path_to/private_key> user@hostname
+```
+
+Alternatively, you can also create a configuration file `~/.ssh/config.sftp` and use it like `sftp -F ~/.ssh/config.sftp`.
+
+```bash
+Host remote.host.tld
+User RemoteUserName
+IdentityFile /path/to/atlernate/identityfile
+```
+
+> The `~/.ssh` directory should have a permission of `700`, meaning only the use should have access to this directory. 
+
+## SFTP vs. FTPS
+
+| SFTP | FTPS |
+| --- | --- |
+| SFTP builds on Secure Shell Protocol `SSH` and adds on file transfer capabilities. | FTPS builds on File Transfer Protocol `FTP` and adds on a security and encryption layer through `TLS`. |
+| Uses a single connection through only one port, making it easier to install firewall solutions. | It needs a secondary data connection, and its use of multiple ports makes it difficult for firewalls to work. |
+| Involves a high resource overhead and slows down file delivery. | It is simple, straightforward, and lean, making it several times faster. |
+| Supports only binary transmission, and users cannot choose between different modes. | It supports both binary and ASCII transmissions, making it easier to maintain logs. |
+| Authentication and does not need signed certificates, as the data is inherently encrypted through public-key cryptography.  | The FTP server must mandatorily provide a public-key certificate to sign off on the authentication. |
+| Supports advance features like `chown`, `chmod`, `mkdir`, `mv` and `ln` on the remote system. | Supports limited features like `cd`, `ls`, `abor` and `size`.
+
+- `abor` is to cancel a file transfer currently in progress.
+- `size` fetch file size of remote file.

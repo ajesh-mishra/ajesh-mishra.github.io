@@ -1,0 +1,197 @@
+---
+title: "Apache"
+description: "Apache is an open-source web server. Latest version is `2.4.0`."
+author: "Ajesh Mishra"
+date: "May 5, 2022"
+duration: "5 min read"
+tags: ['apache', 'middleware']
+apache: "https://images.unsplash.com/photo-1541873676-a18131494184?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1618&q=80"
+---
+
+# Installation
+
+```bash
+# Updates the Ubuntu OS
+sudo apt-get update
+
+# Installs Apache
+sudo apt-get install apache2
+```
+
+# Configuration
+
+Default configuration file for RHEL: `/etc/httpd/conf/httpd.conf` and Ubuntu: `/etc/apache2/conf/httpd.conf`
+
+```ruby
+ServerRoot "/etc/apache2"
+Listen "80"
+
+DefaultRuntimeDir ${APACHE_RUN_DIR}
+PidFile ${APACHE_PID_FILE}
+Timeout 300
+KeepAlive On
+
+# This directive defines the maximum number of requests per one
+# persistent connection. 
+# The value is set to 100 by default.
+MaxKeepAliveRequests 100
+
+# The number of seconds Apache httpd will wait for a subsequent request 
+# before closing the connection.
+KeepAliveTimeout 5
+
+User ${APACHE_RUN_USER}
+Group ${APACHE_RUN_GROUP}
+
+HostnameLookups Off
+ErrorLog ${APACHE_LOG_DIR}/error.log
+LogLevel warn
+
+<Directory />
+  Options FollowSymLinks
+  # This directive determines if the value of a specific 
+  # directive is overridable in the .htaccess file.
+  AllowOverride None
+  Require all denied
+</Directory>
+
+<Directory /usr/share>
+	AllowOverride None
+	Require all granted
+</Directory>
+
+<Directory /var/www/>
+  Options Indexes FollowSymLinks
+  AllowOverride None
+  Require all granted
+</Directory>
+
+# .htaccess file has access control information in each directory
+AccessFileName .htaccess
+
+<FilesMatch "^\.ht">
+  Require all denied
+</FilesMatch>
+
+# Denies access to all kinds of Image files.
+<FilesMatch "\.(?i:gif|jpe?g|png)$">
+  Require all denied
+</FilesMatch>
+
+LogFormat "%v:%p %h %l %u %t "%r" %>s %O "%{Referer}i" "%{User-Agent}i"" vhost_combined
+LogFormat "%h %l %u %t "%r" %>s %O "%{Referer}i" "%{User-Agent}i"" combined
+LogFormat "%h %l %u %t "%r" %>s %O" common
+LogFormat "%{Referer}i -> %U" referer
+LogFormat "%{User-agent}i" agent
+
+# Absolute path of the configuration file
+Include /etc/apache2/conf/ssl.conf
+Include ports.conf
+
+# Path relative to the ServerRoot
+Include conf/vhosts/ssl.conf
+
+# It works identically to the Include directive, 
+# but it will be silently ignored if wildcards are used and 
+# they do not match any file or directory.
+IncludeOptional conf-enabled/*.conf
+IncludeOptional sites-enabled/*.conf
+IncludeOptional mods-enabled/*.load
+IncludeOptional mods-enabled/*.conf
+```
+
+#### /etc/httpd/conf/httpd.conf
+
+## Useful Directives
+
+- **LoadModule** – The `load-module` directive is used to load Dynamic Share Objects.
+- **Location** – The location tags `<Location>` and `</Location>` are used to create a container for access control based on an URL.
+
+```ruby
+# Enables status requests but allows them only from browsers at example.com
+<Location "/status">
+  SetHandler server-status
+  Require host example.com
+</Location>
+```
+
+- **MaxClients** – This directive defines the limit for the total number of server processes or the number of simultaneously connected clients.
+- **ServerRoot** – This directive is used to define the top-level dir for the website contents. The default value is set to `/etc/apache2` or `/etc/httpd`. Typically it will contain the subdirectories `conf/` and `logs/`.
+- **ServerName** – defines the hostname and port for the server.
+- **PidFile** – defines the filename for the server PID file. By default, the value is set to `/var/run/apache2/apache2.pid` or `/var/run/httpd/httpd.pid`.
+- **Alias** - Configure httpd to serve documents outside the `DocumentRoot`.
+
+```bash
+# URL: http://localhost:80/docs/dir/file.html
+# File System: /var/web/dir/file.html
+Alias "/docs" "/var/web"
+```
+
+- **Reverse Proxy** - When https serves document from a remote server
+
+```bash
+ProxyPass "/foo/" "http://internal.example.com/bar/"
+ProxyPassReverse "/foo/" "http://internal.example.com/bar/"
+ProxyPassReverseCookiePath "/foo/" "/bar/"
+```
+
+# Logs
+
+The default log directory is `/etc/apache2/logs/`. 
+
+```bash
+ls /etc/apache2/logs
+error_log access_log mod_jk.log httpd.pid
+```
+
+# Creating a VirtualHost
+
+Apache supports VirtualHost, which means you can host multiple websites in a single Apache instance.
+
+```ruby
+<VirtualHost *:80>
+	ServerAdmin admin@info.net
+	ServerName info.net
+	ServerAlias info.net
+
+	# The document root is the directory containing the HTML files 
+	# served to the clients. This value is set to /var/www/html by default.
+	DocumentRoot /var/www/info.net/html
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+
+#### /etc/apache2/sites-available/info.net.conf
+
+```ruby
+ServerName info.net
+```
+#### /etc/apache2/conf-available/servername.conf
+
+```bash
+# Activate the configuration for info.net
+sudo a2ensite info.net.conf
+
+# Need to restart Apache service for this change to reflect
+sudo systemctl restart apache2
+
+# Another way to manage/ restart apache
+sudo apache2ctl restart
+```
+
+# Useful Commands
+
+```bash
+# Check the httpd conf file
+apachectl -V | grep "HTTPD_ROOT"
+
+# Test if conf file is syntactically okay
+apachectl -t
+
+# List all the VirtualHosts
+apachectl -t -D DUMP_VHOSTS
+
+# List all the modules available
+apachectl -t -D DUMP_MODULES
+```

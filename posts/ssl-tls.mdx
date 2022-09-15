@@ -1,0 +1,36 @@
+---
+title: "SSL/ TLS"
+description: "SSL and TLS are security protocols that are used to secure network communications where TLS supersedes the older deprecated SSL."
+author: "Ajesh Mishra"
+date: "Apr 15, 2022"
+duration: "10 min read"
+tags: ['mft', 'certificate', 'ssl', 'tls']
+cover: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80"
+---
+
+Transport Layer Security is a cryptographic protocol designed to provide communications security over a computer network. The protocol is widely used in applications such as email, instant messaging, and voice over IP, but it's use in securing `HTTPS` and `FTPS` remains the most publicly visible.
+
+| SSL | TLS |
+| --- | --- |
+| Secure Socket Layer | Transport Layer Security |
+| Latest version is `v3`  introduced in 1996 | Latest version is `v1.3` introduced in 2018 |
+| Vernereble to MITM (man in the middle) attack | Mitigates attacks using `TLS_FALLBACK_SCSV` |
+
+## How SSL/ TLS works?
+
+SSL/ TLS make use of **Public Key Cryptography**. Public key cryptography is a method of encrypting or signing data with two different keys and making one of the keys public, available for anyone who whishes to send data securely. The other key is private. Data encrypted with the public key can only be decrypted with the private key because of this two keys are required, so public key cryptography is also known as **asymmetric cryptography**.
+
+- Client sends list of cipher it supports to the server.
+- Server confirms the cipher that will be used to secure the communication. Along with that the server also sends the PKI Certificate which has the server’s public key and the server’s hostname in it.
+- Client then generates a unique session (symmetric) key that would be used for the communication. However the session key is encrypted by the server’s public key.
+
+
+# Hash
+
+Hashing uses one way algorithm that results in a hash or message digest. This is used to verify the integrity of the message received. Examples of hashing algorithms:
+
+| Algorithm Name | Key Size |
+| --- | --- |
+| SHA-1 | 160 |
+| SHA-2 |  |
+| MD5 |  |

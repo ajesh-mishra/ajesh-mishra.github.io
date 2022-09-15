@@ -1,0 +1,72 @@
+---
+title: "Palindrome Number"
+description: "Rust coding challenge to validate if a given number is a palindrome."
+author: "Ajesh Mishra"
+date: "June 12, 2022"
+duration: "5 min read"
+tags: ["rust", "challenge", "easy", "valid-palindrome"]
+cover: "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+---
+
+## Solution
+
+An integer is a palindrome when it reads the same backward as forward. For example, 121 is a palindrome while 123 is not.
+
+```rust
+fn is_palindrome(x: i32) -> bool {
+  if x < 0 {
+    return false;
+  }
+
+  let given_str = x.to_string();
+  let mut rev_str = String::from("");
+
+  for c in given_str.chars() {
+    rev_str = format!("{}{}", c, rev_str);
+  }
+
+  if given_str == rev_str {
+    return true;
+  }
+
+  false
+}
+```
+
+#### main.rs
+
+## Main Function
+
+```rust
+fn main() {
+  println!("{}", is_palindrome(12321));
+}
+```
+
+#### main.rs
+
+## Test Cases
+
+```rust
+#[cfg(test)]
+mod tests {
+  use super::*;
+  
+  #[test]
+  fn tc_1() {
+    assert_eq!(is_palindrome(121), true);
+  }
+
+  #[test]
+  fn tc_2() {
+    assert_eq!(is_palindrome(-121), false);
+  }
+
+  #[test]
+  fn tc_3() {
+    assert_eq!(is_palindrome(10), false);
+  }
+}
+```
+
+#### main.rs

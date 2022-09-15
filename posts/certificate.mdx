@@ -1,0 +1,64 @@
+---
+title: "Certificates"
+description: "Let's talk about certificates and how they run the internet and make it secure and reliable"
+author: "Ajesh Mishra"
+date: "Apr 15, 2022"
+duration: "10 min read"
+tags: ['mft', 'certificate', 'ssl', 'tls']
+cover: "https://images.unsplash.com/photo-1446941611757-91d2c3bd3d45?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1604&q=80"
+---
+
+
+```bash
+# Generate a CSR - Certificate Signing Request
+openssl req -newkey rsa:2048 -keyout private.txt -out csr.txt
+```
+
+# PKI
+
+Public Key Infrastructure is a collection or hierarchy of digital security certificates. These certificates contain public key and sometimes mathematically related private key.
+
+## Components of PKI
+
+| Component Name | Role |
+| --- | --- |
+| Certificate Authority | Issues, renews, revokes certifcates and maintains CRL. |
+| Registration Authority | Also called a subordinate of CA, should be used to manage certificates. |
+| Certificate Revocation List | Verifies validity of certificates using serial number. |
+| Certificate Template | Blueprint used when issuing certificates. |
+| Certificate | Contains subject name, signature of CA, expiry info and public/ private key. |
+
+> CA signs a certificate with it’s private key and this can be verified with the CA’s public key.
+> 
+
+## Contents of Certificate
+
+- Version Number of the Certifcate like standard `X.509`
+- Serial Number
+- CA digital signature and algorithms used
+- Validity Period
+- Subject Name like: url, email address, server name and etc
+- May or may not contain a Public/ Private Key
+
+## Certificate Signing Request
+
+- A public and private key pair is generated
+- Private key should not be shared with anyone. But sometimes they are made available to trusted parties and the process is called key escrow.
+- CSR generated has the unique public key in `PKCS` format. CSR is sent to a CA for signing.
+
+# OCSP
+
+Online Certificate Status Protocol allows a client to query status of a specific certificate. The advantage over CRL is that the client don’t have to download the entire certificate list.
+
+OCSP Stapling: When a certificate owner checks with CA for it’s status periodically, such as a web server with an SSL/ TLS certificate.
+
+# Digital Signature
+
+CA Authority uses it's own private key to encrypt the contents of the certificate, the cypher text is attached to the certificate as digital signature.
+
+Digital Signature provides data authenticity, integrity and non-repudiation. But they don’t provide data confidentiality, that is what encryption is for.
+
+- Create a hash of the data
+- Encrypt the message digest using sender’s private key which can then be verified by the recipient using sender's public key.
+
+> Root certificates are self signed certificates. Self signed certificates are signed by their own private key.

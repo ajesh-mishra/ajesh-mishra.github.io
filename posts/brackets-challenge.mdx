@@ -1,0 +1,138 @@
+---
+title: "Brackets Challenge"
+description: "Rust coding challenge to check if the brackets balance in a given string."
+author: "Ajesh Mishra"
+date: "May 28, 2022"
+duration: "5 min read"
+tags: ["rust", "challenge", "brackets"]
+cover: "https://images.unsplash.com/photo-1630839437035-dac17da580d0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1615&q=80"
+---
+
+## Solution (rust playground: 0.78s)
+This solution is best to understand the algorithm and logic of how to check if the brackets are balanced.
+
+```rust
+#[derive(Debug, PartialEq, Eq)]
+enum Bracket {
+  OpenCurly,
+  OpenSquare,
+  OpenCommon
+}
+
+fn main(s: String) -> bool {
+  let mut tokens: Vec<Bracket> = Vec::new();
+  
+  for c in s.chars() {
+    match c {
+      '{' => {
+        tokens.push(Bracket::OpenCurly);
+      },
+      '}' => {
+        if tokens.is_empty() || tokens.pop().unwrap() != Bracket::OpenCurly {
+          return false;
+        }
+      },
+      '[' => {
+        tokens.push(Bracket::OpenSquare);
+      },
+      ']' => {
+        if tokens.is_empty() || tokens.pop().unwrap() != Bracket::OpenSquare {
+          return false;
+        }
+      },
+      '(' => {
+        tokens.push(Bracket::OpenCommon);
+      },
+      ')' => {
+        if tokens.is_empty() || tokens.pop().unwrap() != Bracket::OpenCommon {
+          return false;
+        }
+      },
+      _ => {}
+    }
+  }
+  if tokens.is_empty() {
+    return true;
+  }
+  false
+}
+```
+
+#### main.rs
+
+## Test Cases
+
+```rust
+#[cfg(test)]
+mod tests {
+  use super::*;
+  
+  #[test]
+  fn tc_1() {
+    let input = "{ajesh}{}[()]";
+    assert_eq!(main(input.to_string()), true);
+  }
+  
+  #[test]
+  fn tc_2() {
+    let input = "{}{}[(()]";
+    assert_eq!(main(input.to_string()), false);
+  }
+  
+  #[test]
+  fn tc_3() {
+    let input = "{ajesh}{}[]";
+    assert_eq!(main(input.to_string()), true);
+  }
+  
+  #[test]
+  fn tc_4() {
+    let input = "{{ajesh}}";
+    assert_eq!(main(input.to_string()), true);
+  }
+  
+  #[test]
+  fn tc_5() {
+    let input = "{{aje(sh}}";
+    assert_eq!(main(input.to_string()), false);
+  }
+  
+  #[test]
+  fn tc_6() {
+    let input = "{{ajesh}})";
+    assert_eq!(main(input.to_string()), false);
+  }
+}
+```
+
+#### main.rs
+
+## Optimized Solution (rust playground: 1.03s)
+
+Some dude on the internet said this solution was the fastest on leet code for rust solutions.
+
+```rust
+use std::collections::{HashMap, HashSet};
+
+pub fn is_valid(s: String) -> bool {
+    let brackets: HashMap<char, char> = vec![(')', '('), ('}', '{'), (']', '[')].into_iter().collect();
+    let opening_brackets: HashSet<char> = brackets.values().cloned().collect();
+    let mut stack: Vec<char> = Vec::new();
+    
+    for c in s.chars() {
+        if brackets.contains_key(&c) && stack.pop() != Some(brackets[&c]) {
+            return false;
+        } else if opening_brackets.contains(&c) {
+            stack.push(c);
+        }
+    }
+    stack.is_empty()
+}
+
+fn main() {
+    let result = is_valid("(ajesh){}]".to_string());
+    println!("{result}");
+}
+```
+
+#### main.rs

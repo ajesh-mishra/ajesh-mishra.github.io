@@ -1,0 +1,79 @@
+---
+title: "Sub String Challenge"
+description: "Rust coding challenge to find if a sub-string is present in a given string."
+author: "Ajesh Mishra"
+date: "June 12, 2022"
+duration: "5 min read"
+tags: ["rust", "challenge", "easy", "sub-string"]
+cover: "https://images.unsplash.com/photo-1602266624233-233f99b9de36?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80"
+---
+
+## Solution
+
+```rust
+fn str_str(haystack: String, needle: String) -> i32 {
+  let mut i = 0;
+  let needle_len = needle.len();
+  
+  while (i + needle_len) <= haystack.len() {
+    if haystack[i..i+needle_len] == needle {
+      return i as i32;
+    }
+    i += 1;
+  }
+  
+  return -1;
+}
+```
+
+#### main.rs
+
+## Main Function
+
+```rust
+fn main() {
+  let result = str_str("hello".to_string(), "ll".to_string());
+  println!("{}", result);
+}
+```
+
+#### main.rs
+
+## Test Cases
+
+```rust
+#[cfg(test)]
+mod tests {
+  use super::*;
+  
+  #[test]
+  fn tc_1() {
+    let haystack = String::from("hello");
+    let needle = String::from("ll");
+    assert_eq!(str_str(haystack, needle), 2);
+  }
+  
+  #[test]
+  fn tc_2() {
+    let haystack = String::from("aaaaa");
+    let needle = String::from("baa");
+    assert_eq!(str_str(haystack, needle), -1);
+  }
+  
+  #[test]
+  fn tc_3() {
+    let haystack = String::from("ajesh mishra");
+    let needle = String::from("mishr");
+    assert_eq!(str_str(haystack, needle), 6);
+  }
+  
+  #[test]
+  fn tc_4() {
+    let haystack = String::from("ajesh mishra");
+    let needle = String::from("mishra");
+    assert_eq!(str_str(haystack, needle), 6);
+  }
+}
+```
+
+#### main.rs

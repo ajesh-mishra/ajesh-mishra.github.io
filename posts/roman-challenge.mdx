@@ -1,0 +1,91 @@
+---
+title: "Roman Challenge"
+description: "Rust coding challenge to convert roman numeral to binary digit."
+author: "Ajesh Mishra"
+date: "May 28, 2022"
+duration: "5 min read"
+tags: ["rust", "challenge", "easy", "roman"]
+cover: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80"
+---
+
+## Solution
+This solution is best to understand the algorithm and logic to make the conversion using Hashmaps which are a provided as part of rust standard library.
+
+```rust
+use std::collections::HashMap;
+
+fn main(s: String) -> i32 {
+  let roman = HashMap::from([
+    ('I', 1),
+    ('V', 5),
+    ('X', 10),
+    ('L', 50),
+    ('C', 100),
+    ('D', 500),
+    ('M', 1000)
+  ]);
+  
+  let mut prev = 0;
+  let mut curr;
+  let mut result = 0;
+  
+  for c in s.chars() {
+    curr = *roman.get(&c).unwrap();
+    
+    if prev == 0 {
+      prev = curr;
+    } else if prev < curr {
+      result += curr - prev;
+      prev = 0;
+    } else {
+      result += prev;
+      prev = curr;
+    }
+  }
+  result += prev;
+  result
+}
+```
+
+#### main.rs
+
+## Test Cases
+
+```rust
+#[cfg(test)]
+mod tests {
+  use super::*;
+  
+  #[test]
+  fn tc_1() {
+    let input = "III";
+    assert_eq!(main(input.to_string()), 3);
+  }
+  
+  #[test]
+  fn tc_2() {
+    let input = "LVIII";
+    assert_eq!(main(input.to_string()), 58);
+  }
+  
+  #[test]
+  fn tc_3() {
+    let input = "MCMXCIV";
+    assert_eq!(main(input.to_string()), 1994);
+  }
+  
+  #[test]
+  fn tc_4() {
+    let input = "XXIII";
+    assert_eq!(main(input.to_string()), 23);
+  }
+  
+  #[test]
+  fn tc_5() {
+    let input = "XXIX";
+    assert_eq!(main(input.to_string()), 29);
+  }
+}
+```
+
+#### main.rs
