@@ -4,7 +4,7 @@
 // }
 
 // module.exports = nextConfig
-
+const path = require('path');
 const ghPages = process.env.DEPLOY_TARGET === 'gh-pages';
 
 const withMDX = require("@next/mdx")({
@@ -14,7 +14,7 @@ const withMDX = require("@next/mdx")({
 module.exports = withMDX({
   pageExtensions: ["js", "jsx", "mdx"],
   target: "serverless",
-  basePath: '/blog',
+  basePath: ghPages ? '/blog' : '',
   assetPrefix: ghPages ? './' : '',
   exportPathMap: function () {
     return {
