@@ -8,7 +8,7 @@ export default function CommandPallette({ postsData, isOpen, setIsOpen }) {
   const filteredPosts = query
     ? postsData.filter((post) => {
         return post.tags.find((tag) => {
-          if (tag.includes(query)) {
+          if (tag.includes(query.toLowerCase())) {
             return post;
           }
         });
@@ -17,7 +17,8 @@ export default function CommandPallette({ postsData, isOpen, setIsOpen }) {
 
   useEffect(() => {
     function onKeyDown(event) {
-      if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
+      // if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
+      if (event.key === "s") {
         setIsOpen(!isOpen);
       }
     }
