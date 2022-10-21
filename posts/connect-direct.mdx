@@ -42,13 +42,13 @@ WHERE (CCODE, PNAME, PNUM, STATT, SNODE, FNAME)
 - KEEP | CATLG, (if process completes successfully)
 - KEEP | CATLG | DELETE (if process ends abruptly)
 
-> Default Client Port (1363) and Server Port (1364)
+> Default Client Port `1363` and Server Port `1364`
 
 ## What are the important parameters in netmap.cfg?
-- **comm.info**: contains remote nodes IP/ DNS and Port (1364)
-- **alternate.comminfo**: to be configured with multiple IPs and Ports for the Pnode which can initiate connection with more than one IP address. This is required when Netmap Check is turned on.
-- **alt.comm**.outbound: to be configured with multiple IPs and Ports for Snodes with multiple NIC cards, when Snode can listen to multiple IP addresses. Pnode will try to connect all the IPs configured in this parameter.
-- **outgoing.address**: to be configured with Virtual IP of the Snode when it's running on HA/ cluster configuration. This is required when Netmap Check is turned on.
+- `comm.info`: contains remote nodes IP/ DNS and Port `1364`
+- `alternate.comminfo`: to be configured with multiple IPs and Ports for the Pnode which can initiate connection with more than one IP address. This is required when Netmap Check is turned on.
+- `alt.comm`.outbound: to be configured with multiple IPs and Ports for Snodes with multiple NIC cards, when Snode can listen to multiple IP addresses. Pnode will try to connect all the IPs configured in this parameter.
+- `outgoing.address`: to be configured with Virtual IP of the Snode when it's running on HA/ cluster configuration. This is required when Netmap Check is turned on.
 
 | Operating System | Version |
 | --- | --- |
@@ -57,15 +57,15 @@ WHERE (CCODE, PNAME, PNUM, STATT, SNODE, FNAME)
 
 ## TCQ: Transmission Control Queue
 - Hold - When hold is yes during execution or process is in error state
-- Timer - STARTT is mentioned or if process in retry state
+- Timer - `STARTT` is mentioned or if process in retry state
 - Wait - Process is waiting for a session to be executed
 - Execution - When the file is being transferred
 
 ## Transfer b/w unix and windows via CD
 Default datatype for UNIX and all other cd nodes is text except Windows. Default datatype for Windows is binary
 
-- xlate=yes is default for text file transfer
-- xlate=no is default for binary file transfer
+- `xlate=yes` is default for text file transfer
+- `xlate=no` is default for binary file transfer
 
 For file transfer b/w two ASCII nodes like UNIX and Windows it is recommended to add datatype=binary in both from and to part of the copy statement. This ensures that there is no data translation and the file is transferred as it is.
 
