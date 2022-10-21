@@ -17,8 +17,8 @@ export default function CommandPallette({ postsData, isOpen, setIsOpen }) {
 
   useEffect(() => {
     function onKeyDown(event) {
-      // if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
-      if (event.key === "s") {
+      if (event.key === "e" && (event.metaKey || event.ctrlKey)) {
+      // if (event.key === "s") {
         setIsOpen(!isOpen);
       }
     }
