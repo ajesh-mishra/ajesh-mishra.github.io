@@ -33,12 +33,18 @@ export default function Home({ postsData }) {
     
       <Hero />
       <Header postsData={postsData} />
-      <ArticleList postsData={postsData} />
+      <ArticleList postsData={postsData} filter="mft" limit="true" size="5" title="Managed File Transfer" />
+      <ArticleList postsData={postsData} filter="devops" limit="true" size="5" title="DevOps" />
+      <ArticleList postsData={postsData} filter="challenge" limit="true"  size="5" title="LeetCode" />
+      <ArticleList postsData={postsData} filter="middleware" limit="true" size="5" title="Middleware Technologies" />
     </>
   );
 }
 
 export async function getStaticProps() {
+  // const parms = {
+  //   filter: 
+  // }
   const postsData = getPostsMetaData()
   return {
     props: {

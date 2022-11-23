@@ -1,11 +1,23 @@
 import Link from "next/link";
+import Tags from "./Tags";
 
-export default function ArticleList({ postsData }) {
+export default function ArticleList({ postsData, limit, filter, size, title }) {
+  const posts = postsData.filter(function (post) {
+    if (this.count >= size && limit === "true") {
+      return false;
+    }
+    if (post.tags.includes(filter)) {
+      this.count++;
+      return true;
+    }
+  }, { count: 0 });
+
   return (
     <>
       <div className="mx-auto max-w-5xl my-4 md:my-16 px-2 sm:px-8">
-        <div className="grid gap-2 md:grid-cols-2 sm:gap-4">
-          {postsData.map((metadata) => {
+        <span className="text-fluent-30 text-2xl font-semibold">{title}</span><br /><br />
+        <div className="grid gap-2 md:grid-cols-3 sm:gap-4">
+          {posts.map((metadata) => {
             return (
               <Link href={`/blog/${metadata.id}`} key={metadata.title}>
                 <div
@@ -15,6 +27,7 @@ export default function ArticleList({ postsData }) {
                   <div className="flex flex-col space-y-2">
                     <span className="text-fluent-20">{metadata.title}</span>
                     <p className="card-description">{metadata.description}</p>
+                    {/* <Tags postMetadata={metadata} /> */}
                   </div>
 
                   <div className="flex place-items-center justify-between">
