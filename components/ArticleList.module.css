@@ -1,0 +1,30 @@
+.title {
+    cursor: pointer;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.showmore {
+    @apply text-red-400 text-sm;
+    width: 0%;
+    opacity: 0;
+    transition:
+        width 100ms ease-in-out 150ms,
+        opacity 100ms ease-in-out 150ms;
+}
+
+.icon {
+    @apply fill-red-400 mt-1 mt-0.5 h-4 w-4 px-1;
+    scale: 0.8;
+    transition: scale 100ms ease-in 50ms;
+}
+
+.title:hover .icon {
+    scale: 1.2;
+}
+
+.title:hover .showmore {
+    width: auto;
+    opacity: 1;
+}
