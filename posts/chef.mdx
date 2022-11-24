@@ -1,0 +1,396 @@
+---
+title: "Chef"
+description: "Chef is a CM: Configuration Management Tool."
+author: "Ajesh Mishra"
+date: "Apr 15, 2022"
+duration: "10 min read"
+tags: ['middleware', 'chef']
+cover: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80"
+---
+
+## Components
+
+- **Chef Workstation**: Server where the Chef SDK is installed and developer creates cookbooks, recipes and tests in the kitchen.
+- **Chef Server** stores all the configurations for Chef Node to pull.
+- **Chef Nodes** configure them selfs by pulling the configuration from the Chef Server and this process is called convergence.
+
+## Benefits of using a CM Tool
+
+- **Idempotent**: you can run the script over and over again to ensure that the application is in desired state without any undesirable side effects.
+- **Easy compatibility** with any Cloud Service Provider like AWS, GCP, etc.
+
+# Creating and Running first Recipe
+
+Check out [Vagrant](https://ajesh-mishra.github.io/blog/vagrant) on how to set-up a VM.
+
+
+```ruby
+directory '/test/' do
+	mod '0755'
+	user 'root'
+	group 'root'
+	action :create
+end
+
+file './hello.txt' do
+	content 'Hello World!'
+	mode '0644'
+	owner 'root'
+	group 'root'
+	action :create
+end
+```
+
+#### hello-world.rb
+
+`directory` and `file` are resources and `content`, `mode`, `owner` are the properties.
+
+Chef resource is a “statement of configuration policy”. It describes the desired state of the element of your infrastructure and the steps needed to bring that item to the desired state.
+
+```bash
+# Command to run the recipe locally
+sudo chef-client --local-mode hello-world.rb
+```
+
+## Cookbook
+
+```bash
+# Command to generate a cookbook
+chef generate cookbook cookbooks/apache
+
+# Use the help flag to discover more options
+chef generate --help
+
+# Generating a recipe
+chef generate recipe <path-to-cookbook> <name-of-recipe>
+chef generate recipe ~/cookbooks/apache server
+
+# Executing recipe with the runlist option
+sudo chef-client --local-mode --runlist "recipe[apache::server]"
+
+# Short hand for above command, order of the flags is important
+sudo chef-client -zr "recipe[apache::server]"
+
+# If a recipe is not specified the default recipe will be executed
+sudo chef-client -zr "recipe[apache]"
+```
+
+`metadata.rb` file has the version of the cookbook and the maintainers contact details.
+
+Recipes Directory has `default.rb` which can include one or more recipes located in the cookbook using the `include_recipe` method.
+
+```ruby
+include_recipe 'apache::server'
+```
+#### ~/cookbooks/apache/recipes/default.rb
+
+## Examples
+
+```ruby
+package "httpd" do
+	action :install
+end
+
+file "/var/www/html/index.html" do
+	content "<h1>Hello World!</h1>
+		ipaddress: #{node['ipaddress']}
+		hostname: #{node['hostname']}"
+	action :create
+end
+
+service "httpd" do
+	action :start
+end
+```
+#### Web Server Deployment “~/cookbooks/apache/recipes/server.rb”
+
+
+```ruby
+service 'ntp' do
+	action [ :enable, :start ]
+end
+```
+#### Network Time Protocol
+
+## Templates
+
+```bash
+chef generate template --help
+chef generate template <path-to-cookbook> <name-of-template>
+
+# Generates a embeded ruby file in the 
+# ~/cookbooks/apache/templetes/index.html.erb
+chef generate template ~/cookbooks/apache index.html
+```
+We can extract the html from our server.rb recipe, place it in the index.html.erb templete and update it to use erb template. Now that we have a template we can modify the recipe to use it.
+
+```ruby
+<h1>Hello World!</h1>
+ipaddress: <%= node['ipaddress'] %>
+hostname: <%= node['hostname'] %>
+```
+#### ~/cookbooks/apache/templetes/index.html.erb
+
+```ruby
+template "/var/www/html/index.html" do
+	source 'index.html.erb'
+end
+```
+#### ~/cookbooks/apache/recipes/server.rb
+
+## Variables in Chef
+
+```ruby
+['database']['user'] = "myDBuser"
+['database']['passwd'] = "myPassword"
+```
+#### Declaring Variables
+
+```ruby
+file 'C:\ProgramData\my.ini' do
+	content "
+		user=#{['database']['user']}
+		password=#{['database']['passwd']}
+	"
+	rights :read, 'Everyone'
+end
+```
+#### Reference Variables
+
+## Ohai
+
+This is a command line tool that gives us information about the server in a json format. We can access the various system resources in our recipes using the `node` object as `chef-client` executes ohai and stores all the values in it.
+
+```ruby
+node['ipaddress']
+node['hostname']
+node['memory']['total']
+node['cpu']['0']['mhz']
+```
+
+# Knife Commands
+
+`knife` commands help you communicate with Chef Server from chef-client.
+```bash
+# All options
+knife client --help
+
+# Lists your organization and confirms that you are authenticated
+# to the chef server.
+knife client --list
+
+# Command lets you upload and query cookbooks in the Chef Server
+knife cookbook -help
+
+# Lists all the cookbook in Chef Server
+knife cookbook list
+
+# Commands to manage Chef nodes
+knife node --help
+knife node list              # Lists all the nodes managed by chef server.
+knife node show <node_name>  # shows config related to the node like runlist.
+knife node show <node_name> -a ipaddress    # -a stands for Attributes like ip.
+knife node show <node_name> -a cloud    # Public and Private IP address of EC2.
+```
+Adding a new node to the chef server is called bootstrapping, here are the related commands:
+```bash
+knife bootstrap --help
+knife bootstrap FQDN\                           # Fully Qulified Domain Name
+							  -x USER -P PWD\                 # User ID and Password
+								--sudo\                         # Run with sudo previlages
+								-N node_name\                   # Give it a name
+								-r "recipe[apache::server]".    # What recipe to execute
+```
+Nodes execute sudo chef-client to sync the policies in the chef server.
+
+## Steps for Deployment
+
+- Install Chef tools on the nodes.
+- Transferring the Apache cookbook to Chef Server using `knife cookbook upload` command.
+- Applying the Runlist using the `knife bootstrap` command.
+
+
+# Test deployments with Kitchen
+
+Configuration file for the kitchen is present in `~/cookbook/apache/.kitchen.yml` file.
+```yaml
+---
+driver:
+	name: vagrant
+
+provisioner:
+	name: chef_zero
+
+verifier:
+	name: inspec
+
+platforms:
+	- name: ubuntu-16.04
+	- name: centos-7.2
+
+suites:
+	- name: default
+		run_list:
+			- recipe[apache::default]
+		verifier:
+			inspec_tests:
+				- test/recipes
+		attributes:
+```
+inspec is the testing framework deigned by Chef.
+
+## Kitchen Commands
+
+```yaml
+kitchen create     # Creates a VM defined in driver.
+kitchen converge   # Install Chef Tools, copies and apply cookbooks
+                   # defined in provisioner.
+kitchen verify     # Uses the default_test.rb to test the VM's state.
+kitchen destroy    # Destroyes the VM.
+kitchen login      # Login into the VM.
+```
+
+## Automated Testing
+
+```ruby
+describe port(80) do
+	it { should be_listening }
+end
+
+describe command('curl localhost') do
+	its(:stdout) { should match(/Hello, World!/) }
+end
+```
+
+#### ~/cookbooks/apache/test/recipes/default_test.rb
+
+## Rake Command
+```bash
+# To check the syntax
+rake cop
+
+# To check the local code
+rake unit
+
+# To test code in remote and create a virtual machine
+rake libvirt -- -k'converge' -u x0134742
+```
+
+## Wrapper Cookbook
+
+Update the `metadata.rb` file to define the cookbooks you are dependent on.
+
+```bash
+name 'myhaproxy'
+maintainer 'Ajesh Mishra'
+maintainer_email 'ajesh.mishra@gmail.com'
+license 'all_rights'
+long_description 'Installs/ Configures myhaproxy'
+version '0.1.0'
+
+depends 'haproxy' '= 1.6.7'
+```
+#### ~/cookbooks/myhaproxy/metadata.rb
+
+Update your `default.rb` recipe file to use the parent cookbook’s attribute and finally include it.
+```ruby
+node.default['haproxy']['members'] = [
+	{
+		'hostname' => 'localhost',
+		'ipadress' => '127.0.0.1',
+		'port' => 4000,
+		'ssl_port' => 4000
+	},
+	{
+		'hostname' => 'localhost',
+		'ipadress' => '127.0.0.1',
+		'port' => 4001,
+		'ssl_port' => 4001
+	}
+]
+
+include_recipe 'haproxy::default'
+```
+#### default.rb
+
+## Berkshelf
+
+Berkshelf is a cookbook management tool that allows you to upload your cookbook and all of it’s dependencies to the Chef Server.
+
+`Berksfile` is the configuration file for the Berksshelf tool.
+
+```ruby
+source 'https://supermarket.chef.io'
+metadata
+```
+
+#### ~/cookbooks/myhaproxy/Berksfile
+
+Use the berks install command to install all the dependencies locally. All the dependencies will be downloaded in the ~/.berkshelf/cookbooks/ directory.
+
+```bash
+# Install all the deoendencies of you cookbook
+berks install
+
+# Upload all the cookbooks to the Chef Server.
+berks upload
+```
+
+## Server Artifacts
+
+In addition to storing cookbooks, the Chef Server can also hold additional pieces of policy called artifacts that nodes can utilise for more specific configurations.
+
+These include `roles`, `environments` and `data bags`.
+
+## Role
+
+A role describes a run list of the recipes that are executed on the node. A role may define new defaults or overrides for existing cookbook atribute value.
+
+When you assign a role to a node, you do so in it’s run list.
+
+```ruby
+name 'web'
+description 'Web Server'
+run_list 'recipe[apache]'
+```
+
+#### ~/chef-repo/roles/web.rb
+
+Now after defining roles, you can use roles to bootstrap nodes instead of recipes.
+
+```bash
+knife bootstrap FQDN -x USER -P PWD --sudo -N node_name\                           
+				    -r "role[web]".    # What recipe to execute
+```
+## Environments
+```ruby
+name 'production'
+description 'Where we run production code'
+
+cookbook 'apache' '= 0.1.0'
+cookbook 'myhaproxy' '= 0.1.0'
+```
+#### ~/chef-repo/environments/production.rb
+
+## Data Bags
+
+A data bag is a container of items that represent information in `json` format about your infrastructure that is not tied to a single node.
+
+```bash
+# Use knife command to see the information in data bag
+knife search users "id:bobo"
+```
+This information is also accessible from recipe, like below. We are looping through the users data bag and creating them.
+
+```bash
+search("users", "*.*").each do |user_data|
+	user user_data["id"] do
+		comment user_data["comment"]
+		uid user_data["uid"]
+		gid user_data["gid"]
+		home user_data["home"]
+		shell user_data["shell"]
+	end
+end
+```
+#### user.rb
