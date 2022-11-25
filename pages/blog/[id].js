@@ -1,4 +1,5 @@
-import ArticleHeader from "../../components/ArticleHeader.js";
+import ArticleHeader from "../../components/ArticleHeader";
+import RelatedArticle from "../../components/RelatedArticle";
 import Header from "../../components/Header";
 import Cover from "../../components/Cover";
 import styles from "../../styles/Post.module.css";
@@ -45,6 +46,8 @@ export default function Blog({ postMetadata, postContent, postsData }) {
           </ReactMarkdown>
         </div>
       </div>
+
+      <RelatedArticle postsData={postsData} tags={postMetadata.tags} title={postMetadata.title} />
     </>
   );
 }
