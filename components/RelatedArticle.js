@@ -26,7 +26,7 @@ export default function RelatedArticle({ postsData, tags, title }) {
               <Link href={`/blog/${metadata.id}`} key={metadata.title}>
                 <div
                   key={metadata.id}
-                  className="hover:bg-fluent-210 p-4 rounded shadow-lg flex flex-col justify-between space-y-10 hover:cursor-pointer"
+                  className="hover:bg-fluent-200 p-4 rounded shadow-lg flex flex-col justify-between space-y-10 hover:cursor-pointer"
                 >
 
                   <div className="flex gap-5">

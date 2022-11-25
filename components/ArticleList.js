@@ -15,7 +15,7 @@ export default function ArticleList({ postsData, limit, filter, size, topic }) {
 
   return (
     <>
-      <div className="mx-auto max-w-5xl my-4 md:my-16 px-2 sm:px-8">
+      <div className="mx-auto max-w-5xl my-10 md:my-16 px-2 sm:px-8">
 
         <Link href={`/topic/${filter}`} key={topic}>
           <div className={styles.title}>
@@ -37,13 +37,13 @@ export default function ArticleList({ postsData, limit, filter, size, topic }) {
 
         <br />
 
-        <div className="grid gap-2 md:grid-cols-3 sm:gap-4">
+        <div className="grid gap-2 md:grid-cols-3">
           {posts.map((metadata) => {
             return (
               <Link href={`/blog/${metadata.id}`} key={metadata.title}>
                 <div
                   key={metadata.id}
-                  className="bg-fluent-180 p-4 rounded shadow-lg flex flex-col justify-between space-y-10 hover:cursor-pointer"
+                  className="bg-fluent-190 p-4 rounded shadow-lg flex flex-col justify-between space-y-10 hover:cursor-pointer"
                 >
                   <div className="flex flex-col space-y-2">
                     <span className="text-fluent-20">{metadata.title}</span>

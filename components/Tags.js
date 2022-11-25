@@ -15,7 +15,7 @@ export default function Tag({ postMetadata }) {
         <div className="flex flex-wrap gap-2">
           {postMetadata.tags.map((tag) => {
             return (
-              <span key={tag} className="bg-fluent-190 text-fluent-120 py-0.4 px-3 ring-1 ring-fluent-190 rounded-sm">
+              <span key={tag} className="bg-fluent-190 text-fluent-120 py-0.4 px-3 ring-1 ring-fluent-180 rounded-sm">
                 {tag}
               </span>
             );

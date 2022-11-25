@@ -20,7 +20,7 @@ export default function Header({ postsData }) {
       bg-gradient-to-b from-fluent-220 via-fluent-220/90 to-transparent sm:h-12 px-2 md:px-4"
       >
         <div className="flex place-items-center space-x-2 sm:space-x-3">
-          <span className="text-fluent-50 font-medium sm:text-lg lg:text-xl">
+          <span className="text-fluent-50 text-md font-medium">
             <Link href="/">ajesh-mishra.github.io</Link>
           </span>
         </div>
