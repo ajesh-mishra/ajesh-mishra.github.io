@@ -23,7 +23,10 @@ export default function RelatedArticle({ postsData, tags, title }) {
 
           {posts.map((metadata) => {
             return (
-              <Link href={`/blog/${metadata.id}`} key={metadata.title}>
+              <div key={metadata.title} onClick={() => {
+                window.location.href = `https://ajesh-mishra.github.io/blog/${metadata.id}`
+              }}>
+                {/* href={`/blog/${metadata.id}`} > */}
                 <div
                   key={metadata.id}
                   className="hover:bg-fluent-200 p-4 rounded shadow-lg flex flex-col justify-between space-y-10 hover:cursor-pointer"
@@ -44,7 +47,8 @@ export default function RelatedArticle({ postsData, tags, title }) {
 
 
                 </div>
-              </Link>
+              </div>
+              // 
             );
           })}
         </div>
