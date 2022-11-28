@@ -1,24 +1,25 @@
 import { useState, useEffect, Fragment } from "react";
 import { Dialog, Combobox, Transition } from "@headlessui/react";
+import { useRouter } from 'next/router'
 
 export default function CommandPallette({ postsData, isOpen, setIsOpen }) {
   const [query, setQuery] = useState("");
+  const router = useRouter()
   var tags;
 
   const filteredPosts = query
     ? postsData.filter((post) => {
-        return post.tags.find((tag) => {
-          if (tag.includes(query.toLowerCase())) {
-            return post;
-          }
-        });
-      })
+      return post.tags.find((tag) => {
+        if (tag.includes(query.toLowerCase())) {
+          return post;
+        }
+      });
+    })
     : postsData;
 
   useEffect(() => {
     function onKeyDown(event) {
       if (event.key === "e" && (event.metaKey || event.ctrlKey)) {
-      // if (event.key === "s") {
         setIsOpen(!isOpen);
       }
     }
@@ -63,7 +64,8 @@ export default function CommandPallette({ postsData, isOpen, setIsOpen }) {
             as="div"
             onChange={(metadata) => {
               setIsOpen(false);
-              window.location.href = `https://ajesh-mishra.github.io/blog/${metadata.id}`
+              router.push(`/blog/${metadata.id}`);
+              // window.location.href = `https://ajesh-mishra.github.io/blog/${metadata.id}`
             }}
             className="relative max-w-2xl mx-auto bg-fluent-210 rounded-md shadow-xl ring-1 ring-black/60 divide-y divide-fluent-140/50 overflow-hidden"
           >
@@ -96,9 +98,8 @@ export default function CommandPallette({ postsData, isOpen, setIsOpen }) {
                       {({ active }) => {
                         return (
                           <div
-                            className={`px-5 py-3 hover:cursor-pointer ${
-                              active ? "bg-fluent-180" : ""
-                            }`}
+                            className={`px-5 py-3 hover:cursor-pointer ${active ? "bg-fluent-180" : ""
+                              }`}
                           >
                             <span className="text-fluent-70 font-medium text-sm">
                               {metadata.title}

@@ -30,7 +30,7 @@ export default function Blog({ postMetadata, postContent, postsData }) {
   
   useEffect(() => {
     Prism.highlightAll();
-  }, [router.pathname]);
+  }, [router.query.id ]);
 
   return (
     <>
