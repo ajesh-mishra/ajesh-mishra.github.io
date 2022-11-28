@@ -1,5 +1,6 @@
 import Header from "../../components/Header"
 import Hero from "../../components/Hero"
+import Head from 'next/head'
 import ArticleList from "../../components/ArticleList"
 import { getPostsMetaData } from "../../lib/getPostsData.js"
 import { map } from "../../lib/topicMapping.js"
@@ -7,8 +8,11 @@ import { map } from "../../lib/topicMapping.js"
 export default function Topic({ postsData, filter, topic }) {
   return (
     <>
-      <Hero />
-      <Header postsData={postsData} />
+      <Head>
+        <title>{filter}</title>
+      </Head>
+      <Hero postsData={postsData} />
+      {/* <Header postsData={postsData} /> */}
       <ArticleList postsData={postsData} filter={filter} topic={topic} />
     </>
   );

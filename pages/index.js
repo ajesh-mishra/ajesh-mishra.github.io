@@ -32,8 +32,8 @@ export default function Home({ postsData }) {
         <meta name="apple-mobile-web-app-status-bar-style" content="#11100f" />
       </Head>
 
-      <Hero />
-      <Header postsData={postsData} />
+      <Hero postsData={postsData} />
+      {/* <Header postsData={postsData} /> */}
       <ArticleList postsData={postsData} filter="mft" limit="true" size="5" topic={map['mft']} />
       <ArticleList postsData={postsData} filter="devops" limit="true" size="5" topic={map['devops']} />
       <ArticleList postsData={postsData} filter="challenge" limit="true" size="5" topic={map['challenge']} />

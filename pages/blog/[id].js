@@ -1,6 +1,7 @@
 import ArticleHeader from "../../components/ArticleHeader";
 import RelatedArticle from "../../components/RelatedArticle";
 import Header from "../../components/Header";
+import Head from 'next/head';
 import Cover from "../../components/Cover";
 import styles from "../../styles/Post.module.css";
 import ReactMarkdown from "react-markdown";
@@ -27,15 +28,18 @@ require("prismjs/components/prism-yaml");
 
 export default function Blog({ postMetadata, postContent, postsData }) {
   const router = useRouter()
-  
+
   useEffect(() => {
     Prism.highlightAll();
-  }, [router.query.id ]);
+  }, [router.query.id]);
 
   return (
     <>
-      <Header postsData={postsData} />
-      <Cover src={postMetadata.cover}/>
+      <Head>
+        <title>{postMetadata.id}</title>
+      </Head>
+      {/* <Header postsData={postsData} /> */}
+      <Cover postsData={postsData} src={postMetadata.cover} />
 
       <div className="mx-auto max-w-3xl p-4 sm:p-8">
         <ArticleHeader postMetadata={postMetadata} />
