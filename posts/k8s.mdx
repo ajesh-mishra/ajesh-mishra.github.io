@@ -1,6 +1,6 @@
 ---
 title: "Kubernetes"
-description: "Kubernetes is a container orchestration toll build by Google using Golang."
+description: "Kubernetes is a container orchestration tool build by Google using Golang."
 author: "Ajesh Mishra"
 date: "Sept 3, 2022"
 duration: "5 min read"
@@ -12,15 +12,56 @@ cover: "https://images.unsplash.com/photo-1614727187346-ec3a009092b0?ixlib=rb-1.
 
 - **master**
 - **worker**
+- **node**: could be a VM or a physical machine.
 - **pod**: layer of abstraction on containers like docker.
-- **service**: is a permanent IP and load balancer.
+- **service**: performs both as a
+    - permanent `static IP` with a `DNS name` and
+    - a `load balancer`.
 - **ingress**: route traffic into the cluster.
 - **configmap**: contains information that the pod container might need and it is accessible via environment variable or parameter file.
 - **secret**: attaches to cluster and stores information like credentials, keys and certificates encrypted in Base64 format.
-- **volume**: physical storage connected to the cluster.
+- **volume**: external/ remote physical storage connected to the cluster.
 - **deployments**: blueprint of pods.
 - **statefulset**: used for replicating containers which have data in them like databases.
 
+## Four Processes Run on Master Node
+
+- **API Server**: Exposes all the apis to the kubernetes client/ dashboard.
+- **Scheduler**: Decides where to spin-up the pods and directs `Kublet`.
+- **Controller** Manager: Monitor health of the pods and engages `Scheduler` if a new pod needs to be spin-up.
+- **etcd**: Brain of the cluster which stores cluster state information in a key-value pair.
+
+## Three Processes Run on Worker Nodes
+
+- **Container run-time**: like docker.
+- **Kubelet**: Interface between container and node itself. It starts the pod with the container inside and allocate resources like cpu, memory, etc.
+- **Kube Proxy**: Responsible for forwarding the request/ traffic to the pod.
+
+## Install Minikube and Kubectl
+
+Minikube is a one node kubernetes cluster that can be used for testing. It creates a node with both worker and master services in it.
+
+```bash
+# Command to start a cluster
+minikube start
+
+#Check the status fo the cluster
+minikube status
+```
+
+We can use `kubectl` command to issue commands to the cluster and interact with it.
+
+```bash
+kubectl version
+
+kubectl get nodes
+kubectl get pods
+kubectl get namespaces
+kubectl get deployments
+
+kubectl apply deployment.yaml
+kubectl log <pod_name>
+```
 
 ## Configuration Files: YAML
 

@@ -1,10 +1,10 @@
 export default function Tag({ postMetadata }) {
   return (
     <>
-      <div className="my-4 text-xs flex space-x-2 text-fluent-120">
+      <div className="my-4 text-xs flex space-x-2 text-fluent-80">
         <div className="flex space-x-2">
           <svg
-            className="w-4 h-4 fill-fluent-120"
+            className="w-4 h-4 fill-fluent-80"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
           >
@@ -15,7 +15,7 @@ export default function Tag({ postMetadata }) {
         <div className="flex flex-wrap gap-2">
           {postMetadata.tags.map((tag) => {
             return (
-              <span key={tag} className="bg-fluent-190 text-fluent-120 py-0.4 px-3 ring-1 ring-fluent-180 rounded-sm">
+              <span key={tag} className="bg-fluent-190 text-fluent-80 py-0.4 px-3 ring-1 ring-fluent-170 rounded-sm">
                 {tag}
               </span>
             );

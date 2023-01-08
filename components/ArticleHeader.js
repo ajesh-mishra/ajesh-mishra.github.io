@@ -11,7 +11,7 @@ export default function ArticleHeader({ postMetadata }) {
 
         <Tags postMetadata={postMetadata} />
 
-        <p className="text-sm text-fluent-100 sm:text-base">
+        <p className="text-sm text-fluent-50 sm:text-base">
           {postMetadata.description}
         </p>
       </div>
@@ -26,7 +26,7 @@ export default function ArticleHeader({ postMetadata }) {
         </div>
 
         <div>
-          <span className="text-sm font-medium text-fluent-70 sm:text-base">
+          <span className="text-sm font-medium text-fluent-50 sm:text-base">
             {postMetadata.author}
           </span>
           <span className="flex place-items-center space-x-2 text-xs text-fluent-100 sm:text-sm">
