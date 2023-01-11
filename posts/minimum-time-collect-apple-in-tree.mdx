@@ -12,9 +12,9 @@ Given an undirected tree consisting of n vertices numbered from 0 to n-1, which 
 
 The edges of the undirected tree are given in the array edges, where `edges[i] = [ai, bi]` means that exists an edge connecting the vertices ai and bi. Additionally, there is a boolean array hasApple, where `hasApple[i] = true` means that vertex `i` has an apple; otherwise, it does not have any apple.
 
-## My Solution
+## Optimized Solution using DFS
 
-Use of HashSets make this solution inefficient but this was  before I knew about DFS.
+This solution uses depth first serch in a graph and recursion to solve the problem.
 
 ```rust
 impl Solution {
@@ -126,9 +126,9 @@ mod test {
 
 #### main.rs
 
-## Optimized Solution using DFS
+## My Solution
 
-This solution uses depth first serch in a graph and recursion to solve the problem.
+Use of HashSets make this solution inefficient but this was  before I knew about DFS.
 
 ```rust
 impl Solution {
