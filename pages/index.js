@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import Hero from "../components/Hero"
 import Experience from "../components/Experience"
+import Skill from "../components/Skill"
 import { getPostsMetaData } from "../lib/getPostsData.js"
-import Social from '../components/Social.js';
 
 export default function Home({ postsData }) {
   return (
@@ -32,7 +32,7 @@ export default function Home({ postsData }) {
       </Head>
 
       <Hero postsData={postsData} isHome={true} />
-      <Social />
+      <Skill />
       <Experience />
 
     </>

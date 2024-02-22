@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import CommandPallette from "./CommandPallette";
+import Social from '../components/Social.js';
 
 export default function Hero({ postsData, isHome }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +29,7 @@ export default function Hero({ postsData, isHome }) {
             day job but enthusiastic about web development, devops and cloud
             computing.
           </span>
-          <div className="flex flex-col space-y-2 pt-5 px-10 sm:space-y-0 sm:h-[5rem] sm:flex-row sm:justify-center sm:place-items-center  sm:space-x-4">
+          <div className="flex flex-col space-y-2  px-10 sm:space-y-0 sm:h-[5rem] sm:flex-row sm:justify-center sm:place-items-center  sm:space-x-4">
             <button onClick={() => setIsOpen(true)} className="bg-fluent-50 text-fluent-220 py-2 sm:w-[10rem] text-center sm:ring-fluent-50 hover:bg-fluent-70 rounded-sm">Search Blogs</button>
             {
               isHome
@@ -36,6 +37,7 @@ export default function Hero({ postsData, isHome }) {
                 : <Link href="/"><button className="text-fluent-50 py-2 sm:w-[10rem] sm:ring-1   sm:ring-fluent-50 text-center bg-black/20 hover:bg-black/50 rounded-sm">Home</button></Link>
             }
           </div>
+          <Social />
         </div>
 
       </div>
