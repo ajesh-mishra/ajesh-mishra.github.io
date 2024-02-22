@@ -12,7 +12,6 @@ export default function Topic({ postsData, filter, topic }) {
         <title>{filter}</title>
       </Head>
       <Hero postsData={postsData} />
-      {/* <Header postsData={postsData} /> */}
       <ArticleList postsData={postsData} filter={filter} topic={topic} />
     </>
   );
@@ -20,6 +19,7 @@ export default function Topic({ postsData, filter, topic }) {
 
 export async function getStaticPaths() {
   const paths = [
+    { params: { id: 'aws' } },
     { params: { id: 'mft' } },
     { params: { id: 'devops' } },
     { params: { id: 'challenge' } },

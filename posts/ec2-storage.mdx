@@ -1,0 +1,55 @@
+---
+title: "EC2 Storage"
+description: "We have EC2 Instance specific storage options in AWS and this is seperate from S3."
+author: "Ajesh Mishra"
+date: "Feb 22, 2024"
+duration: "10 min read"
+tags: ['aws', 'cloud']
+cover: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80"
+---
+
+| Type | Options |
+| --- | --- |
+| Block | Elastic Block Storage & EC2 Instance Store |
+| File | Elastic File System |
+| Object | S3 & Glacier |
+
+## EBS Volume - Elastic Block Store
+It’s a Network Drive that can be attached to an Instance.
+- Persists data even after instance is terminated.
+- Can be mounted to a single instance at a time. Except for `io1` and `io2` volume types.
+- Locked to a specific to Availability Zone.
+
+>💡 At the time of provisioning, one has to decide the [Capacity]() and whether to turn on [Delete on Termination]()
+
+## EBS Snapshots
+Taking backup of the volume
+
+- It’s not necessary to detach the volume but recommended while taking snapshots.
+- During Snapshots creation you can select a different Availability Zones, this helps copy volumes.
+
+Features:
+- [EBS Snapshot Archive]() (*takes 24 -72 hours to retrieve*)
+- [Recycle Bin]() (*Retention Rule can be from 1 day to 1 year*)
+
+## EC2 Image Builder
+
+## EC2 Instance Store
+Physical disk space that are available in the EC2 Instance’s Physical server can be attached to the EC2 as Instance Store.
+- High Performance
+- Ephemeral - lost when instance is terminated
+
+>💡 A use case would be to use it as a [Cache]().
+
+## EFS Elastic File System
+
+This is a Managed NFS (Network File System) which can be connected to 100s of EC2 Instances across Availability Zones.
+
+>💡 [EFS Infrequent Access]() is 92% cheaper than Standard EFS for files that are not accessed daily based on a [Lifecycle Policy]().
+
+## Amazon FSx
+
+Extended NFS, helps us use other storage systems other than EFS and EBS.
+
+- Luster: Linux + Cluster
+- Microsoft Windows: SMB & NTFS

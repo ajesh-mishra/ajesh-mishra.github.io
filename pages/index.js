@@ -1,9 +1,8 @@
 import Head from 'next/head'
-import Header from "../components/Header"
 import Hero from "../components/Hero"
-import ArticleList from "../components/ArticleList"
+import Experience from "../components/Experience"
 import { getPostsMetaData } from "../lib/getPostsData.js"
-import { map } from "../lib/topicMapping.js"
+import Social from '../components/Social.js';
 
 export default function Home({ postsData }) {
   return (
@@ -32,12 +31,10 @@ export default function Home({ postsData }) {
         <meta name="apple-mobile-web-app-status-bar-style" content="#11100f" />
       </Head>
 
-      <Hero postsData={postsData} />
-      {/* <Header postsData={postsData} /> */}
-      <ArticleList postsData={postsData} filter="mft" limit="true" size="5" topic={map['mft']} />
-      <ArticleList postsData={postsData} filter="devops" limit="true" size="5" topic={map['devops']} />
-      <ArticleList postsData={postsData} filter="challenge" limit="true" size="5" topic={map['challenge']} />
-      <ArticleList postsData={postsData} filter="middleware" limit="true" size="5" topic={map['middleware']} />
+      <Hero postsData={postsData} isHome={true} />
+      <Social />
+      <Experience />
+
     </>
   );
 }

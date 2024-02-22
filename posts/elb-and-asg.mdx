@@ -1,0 +1,55 @@
+---
+title: "ELB & ASG"
+description: "This post talks about Elastic Load Balancer and Auto Scaling Groups in AWS."
+author: "Ajesh Mishra"
+date: "Apr 15, 2022"
+duration: "5 min read"
+tags: ['aws', 'cloud']
+cover: "https://images.unsplash.com/photo-1446941611757-91d2c3bd3d45?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1604&q=80"
+---
+
+- Horizontal vs Vertical Scaling
+- Scalability vs Elasticity vs Agility
+
+>💡 Elasticity is a cloud native term which refers to the ability to adapt based on load. Example **Auto Scaling Group**
+
+## Elastic Load Balancer
+There are 3 major types of load balancer:
+
+**Application**
+- Layer 7
+- Http or Https or gRCP
+- Static DNS / URL
+
+**Network**
+
+- Layer 4
+- TCP or UDP or TLS
+- Ultra High Performance
+- Static IP using Elastic IP
+
+**Gateway**
+
+- Layer 3
+- GENEVE Protocol
+- Intrusion Detection
+
+
+>💡 [Classic Load Balancer](): Retired in 2023 (Layer 4 & 7)
+
+## Auto Scaling Group
+
+- [Launch Template](): Similar to the widget used for creating EC2.
+- [Target Group](): EC2s created are linked to a Load Balancer.
+
+## ASG Strategies
+
+- [Manual]()
+- [Dynamic](): Respond to changing demand.
+
+| Strategy Type | Strategy |
+| --- | --- |
+| Simple Step Scaling |	Up scale or down scale based on CPU Usage when Cloud Watch alarm is triggered. |
+| Target Tracking Scaling |	Average CPU to be around 40% |
+| Scheduled | Scaling	Based on Usage Pattern |
+| Predictive Scaling |	Use ML and previous usage data to predict |
