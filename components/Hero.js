@@ -25,7 +25,7 @@ export default function Hero({ postsData, isHome }) {
             Hello! I am Ajesh.
           </span>
           <span className="leading-tight text-lg sm:text-xl text-fluent-50 text-center">
-            I am an Infrastructure Technician working on middleware tools in my
+            I am a <snap className="font-semibold text-2xl">Platform Engineer</snap> working on <span className="underline">virtualization</span> & <snap className="underline">containerization</snap> in my
             day job but enthusiastic about web development, devops and cloud
             computing.
           </span>

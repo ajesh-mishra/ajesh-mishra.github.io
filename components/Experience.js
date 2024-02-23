@@ -50,32 +50,31 @@ export default function Experience() {
 
       <br />
 
-      <div className="px-2 sm:px-8">
-      <ol class="border-l border-neutral-300 dark:border-neutral-500">
-        {experiences.map((experience, index) => (
-          <li>
-            <div class="flex-start flex items-center pt-3">
-              <div
-                class="-ml-[5px] mr-3 h-[9px] w-[9px] rounded-full bg-neutral-300 dark:bg-neutral-500"></div>
-              <p class="text-sm text-neutral-500 dark:text-fluent-110">
-                {experience.date}
-                {index === 0
-                  ? <span class="bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 ms-3">present</span>
-                  : <span></span>
-                }
-                {/* index += 1; */}
-              </p>
-            </div>
-            <div class="mb-6 ml-4 mt-2">
-              <h3 class="mb-1.5 text-l font-semibold text-fluent-70">{experience.name}</h3>
-              <p class="mb-3 text-neutral-500 dark:text-fluent-110">
-                {experience.description}
-              </p>
-            </div>
-          </li>
-        ))}
-      </ol>
-        </div>
+      <div className="px-2 sm:px-16">
+        <ol class="border-l border-neutral-300 dark:border-neutral-500">
+          {experiences.map((experience, index) => (
+            <li>
+              <div class="flex-start flex items-center pt-3">
+                <div
+                  class="-ml-[5px] mr-3 h-[9px] w-[9px] rounded-full bg-neutral-300 dark:bg-neutral-500"></div>
+                <p class="text-sm text-neutral-500 dark:text-fluent-110">
+                  {experience.date}
+                  {index === 0
+                    ? <span class="bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 ms-3">present</span>
+                    : <span></span>
+                  }
+                </p>
+              </div>
+              <div class="mb-6 ml-4 mt-2">
+                <h3 class="mb-1.5 text-l font-semibold text-fluent-70">{experience.name}</h3>
+                <p class="mb-3 text-neutral-500 dark:text-fluent-110">
+                  {experience.description}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
 
     </div>
   );
