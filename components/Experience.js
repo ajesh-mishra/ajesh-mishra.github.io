@@ -2,18 +2,21 @@ export default function Experience() {
   const experiences = [
     {
       date: "Jan 2020 ",
-      name: "Platform Engineer | Barclays",
+      position: "Platform Engineer",
+      company: "Barclays",
       description: `Worked on setting up of new file transfer connections along side automating daya to day activities using Python and Cloud Technologies.`
     },
     {
       date: "Feb 2019 - Jan 2020",
-      name: "Lead Infrastructure Engineer | BNY Mellon",
+      position: "Lead Infrastructure Engineer",
+      company: "BNY Mellon",
       description: `I mostly worked on Connect:Direct Migration from a legacy unsupported FTP application.
       Worked on Connect:Direct applications installed on both Linux and Windows.`
     },
     {
       date: "Jan 2017 - Feb 2019",
-      name: "Senior Consultant | Capgemini",
+      position: "Senior Consultant",
+      company: "Capgemini",
       description: `Maintained and supported the Managed File Transfer Estate. 
       The job involved activities like renewing Connect:Direct certificates, 
       Upgrading various tools, 
@@ -22,19 +25,22 @@ export default function Experience() {
     },
     {
       date: "May 2015 - Jan 2017",
-      name: "Application Developer | IBM",
+      position: "Application Developer",
+      company: "IBM",
       description: `As a Sterling Consultant, I mostly worked on Connect:Direct Migration from a legacy unsupported FTP application.
       Worked on Connect:Direct applications installed on both Linux and Windows.`
     },
     {
       date: "Dec 2013 - May 2015",
-      name: "Systems Engineer | Accenture",
+      position: "Systems Engineer",
+      company: "Accenture",
       description: `As a Sterling developer my role was to set-up new file transfer connectivity.
       Worked on IBM MFT Tools like Sterling Integrator, Sterling FIle Gateway and Connect:Direct`
     },
     {
       date: "Dec 2010 - Dec 2013",
-      name: "Systems Engineer Analyst | Tata Consultancy Services",
+      position: "Systems Engineer Analyst",
+      company: "TCS",
       description: `I was part of iON project and was responsible for supporting and maintaining High Avalability in the QA environemnt. 
       The technology stack involved the application (JBoss) and DataBase (MySQL).
       This involved new code deployment on Jboss and data migration and replication in MySQL.`
@@ -66,7 +72,11 @@ export default function Experience() {
                 </p>
               </div>
               <div class="mb-6 ml-4 mt-2">
-                <h3 class="mb-1.5 text-l font-semibold text-fluent-70">{experience.name}</h3>
+                <div className="py-1.5 flex gap-3">
+                  <snap class="mb-1.5 text-l font-semibold text-fluent-70">{experience.position}</snap>
+                  <div className="inline-block h-[1.5rem] w-0.5 self-stretch bg-fluent-100 opacity-100 dark:opacity-50"></div>
+                  <snap class="mb-1.5 text-l text-fluent-70 font-thin">{experience.company}</snap>
+                </div>
                 <p class="mb-3 text-neutral-500 dark:text-fluent-110">
                   {experience.description}
                 </p>
