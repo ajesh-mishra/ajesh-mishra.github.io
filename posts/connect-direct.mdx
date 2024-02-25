@@ -8,6 +8,54 @@ tags: ['protocol', 'mft', 'connectdirect', 'cd']
 cover: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80"
 ---
 
+## UNIX Silent Installation
+
+Need to create a `cd_srvr` cnfiguration file.
+
+```
+cdai_installCmd=install
+cdai_installDir=/apps/cdunix/
+cdai_localNodeName=aix.d**t
+cdai_acquireHostnameOrIP=GB**SR00**N0*
+cdai_serverPort=1364
+cdai_clientPort=1363
+cdai_localCertFile=/apps/cdunix/install/aix.d**t_keycert
+cdai_adminUserid=cdadmin
+cdai_trace=y
+```
+#### CD Configuration File “/apps/cdunix/silent_install/cd_srvr”
+
+Create a `cd_fa` configuration file if FileAgent needs to be installed.
+
+```
+INSTALLER_UI=Console
+USER_INSTALL_DIR=/apps/cdunix/file_agent
+USER_INSTALL_DIR_SET=YES
+```
+#### FA Configuration File “/apps/cdunix/silent_install/cd_fa”
+
+Use the below commands to install and start the application.
+
+```bash
+# Command ro extract the installation script from binary file - cdinstall
+# Extract | Verbose | Create Directory | Modification Time | Buffer Size
+ssh root@$ip "cpio –ivdmB < /apps/cdunix/install/cdinstall /apps/cdunix/install/cdinstall_a"
+
+# Command to Install
+/apps/cdunix/install/cdinstall_a –f /usr/sfg/install/cd_srvr
+
+# Sterling Connect Direct startup command
+su cdadmin -c "/apps/cdunix/ndm/bin/cdpmgr -i /apps/cdunix/ndm/cfg/aix.d**t/initparm.cfg &"
+
+# Sterling Connect Direct File Agent startup command
+su cdadmin -c "nohup /apps/cdunix/file_agent/cdfa -c /apps/cdunix/file_agent/aix.d**t.ser > /dev/null &"
+```
+
+## Windows Installation
+- **Logon locally**: Needs to be a local User.
+- **Replace Level Token**: Submit process on behalf of the user.
+- **Act as part of OS**: Helps Authenticate & Impersonate CD users.
+
 ## Command to Change a CDP
 
 ```bash
