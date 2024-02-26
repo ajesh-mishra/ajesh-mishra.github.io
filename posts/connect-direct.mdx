@@ -39,22 +39,69 @@ Use the below commands to install and start the application.
 ```bash
 # Command ro extract the installation script from binary file - cdinstall
 # Extract | Verbose | Create Directory | Modification Time | Buffer Size
-ssh root@$ip "cpio –ivdmB < /apps/cdunix/install/cdinstall /apps/cdunix/install/cdinstall_a"
+cpio –ivdmB < /apps/cdunix/install/cdinstall /apps/cdunix/install/cdinstall_a
 
 # Command to Install
 /apps/cdunix/install/cdinstall_a –f /usr/sfg/install/cd_srvr
 
 # Sterling Connect Direct startup command
-su cdadmin -c "/apps/cdunix/ndm/bin/cdpmgr -i /apps/cdunix/ndm/cfg/aix.d**t/initparm.cfg &"
+su cdadmin -c "/apps/cdunix/ndm/bin/cdpmgr -i /apps/cdunix/ndm/cfg/aix.test/initparm.cfg &"
 
 # Sterling Connect Direct File Agent startup command
-su cdadmin -c "nohup /apps/cdunix/file_agent/cdfa -c /apps/cdunix/file_agent/aix.d**t.ser > /dev/null &"
+su cdadmin -c "nohup /apps/cdunix/file_agent/cdfa -c /apps/cdunix/file_agent/aix.test.ser > /dev/null &"
 ```
 
 ## Windows Installation
 - **Logon locally**: Needs to be a local User.
 - **Replace Level Token**: Submit process on behalf of the user.
 - **Act as part of OS**: Helps Authenticate & Impersonate CD users.
+
+## SecurePlus
+
+GSK commands to check if the KDB is still working and the list of certs it already has.
+
+```bash
+# Export GSK Lib path
+export LD_LIBRARY_PATH=/install_dir/ndm/lib/gsk/lib
+export LIBPATH=/install_dir/ndm/lib/gsk/lib
+
+# Verify Password
+/install_dir/ndm/lib/gsk/lib/gsk8capicmd -keydb -stashpw \
+    -db /install_dir/ndm/secure+/certificates/cdketstore.kdb \
+    -pw password_kdb
+
+# Check cert list in KDB
+/install_dir/ndm/lib/gsk/lib/gsk8capicmd -cert -list \
+    -db /install_dir/ndm/secure+/certificates.cdketstore.kdb -stashed
+
+# Check cert details using label name
+/install_dir/ndm/lib/gsk/lib/gsk8capicmd -cert -details \
+    -label "rhel.test" \
+    -db /install_dir/ndm/secure+/certificates.cdketstore.kdb -stashed
+```
+
+Import new cert into KDB using `spcli.sh`
+
+```bash
+cd /install_dir/ndm/bin/
+./spcli.sh
+
+# Command to import Key Cert
+SPCLI> Import KeyCert
+    File="/install_dir/ndm/secure+/certificates/keycert_2024.txt"
+    Passphrase=password_cert
+    Label=rhel.test_2024;
+
+# COmmand to import Trusted Cert
+SPCLI> Import TrustedCert
+    File="/install_dir/ndm/secure+/certificates/keycert_2024.txt"
+    ImportMode=Add;
+
+# Finally update the Local Node to reference the new cert label
+SPCLI> Update LocalNode
+    Override=Y
+    KeyCertLabel=rhel.test_2024;
+```
 
 ## Command to Change a CDP
 
