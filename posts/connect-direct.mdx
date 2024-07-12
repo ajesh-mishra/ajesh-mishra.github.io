@@ -103,8 +103,13 @@ SPCLI> Update LocalNode
     KeyCertLabel=rhel.test_2024;
 ```
 
-## Command to Change a CDP
+## Open `direct` prompt
+```bash
+export NDMAPICFG=/install_dir/ndm/cfg/cliapi/ndmapi.cfg
+/install_dir/ndm/bin/direct
+```
 
+## Command to Change a CDP
 ```bash
 CHANGE PROCESS 
 WHERE (NODE, PNAME, PNUM, SUB)
